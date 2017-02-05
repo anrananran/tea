@@ -1,0 +1,292 @@
+@charset "utf-8";
+
+//isLoading
+.isloading-wrapper.isloading-right {
+	margin-left: 10px;
+}
+
+.isloading-overlay {
+	position: relative;
+	text-align: center;
+}
+
+.isloading-overlay .isloading-wrapper {
+	background: #464545;
+	border-radius: 4px;
+	background-clip: padding-box;
+	display: inline-block;
+	margin: 0 auto;
+	padding: 10px 20px;
+	top: 10%;
+	z-index: 9000;
+	
+	i{
+		width: 32px;
+		height: 32px;
+		background: url(../image/loader-spin.gif) no-repeat;
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: 10px;
+	}
+}
+
+//select2
+// select.is-h40 + .select2-container .select2-selection--single{
+// 	height: 40px;
+// 	
+// 	.select2-selection__rendered{
+// 		height: 38px;
+// 		line-height: 38px;
+// 	}
+// 	
+// 	.select2-selection__arrow{
+// 		height: 38px;
+// 	}
+// }
+// 
+// 
+// .select2-container.select2-container--default {
+// 	.select2-selection--single{
+// 		border: 1px solid #EEEEEE;
+// 	}
+// 	
+// 	.select2-dropdown{
+// 		border: 1px solid #eee;
+// 	}
+// }
+
+/**
+ * layer
+ */
+/**
+ * layer
+ */
+html .layui-layer{
+    
+	background-color:#1B1B22;
+    
+    &.layui-layer-loading{
+        border:0;
+        background:none;
+		
+		.layui-layer-content{
+			margin: 0 auto;
+		}
+    }
+	
+	
+	&.layui-layer-msg{
+		background-color:rgba(#000,.8);
+	}
+	
+	&.layui-layer-dialog,
+	&.layui-layer-page{
+		
+		.layui-layer-content{
+			height: auto!important;
+			max-height: 790px;
+		}
+		
+	}
+    
+    .layui-layer-title{
+        background-color:#1B1B22;
+        color: #fff;
+        height:55px;
+        line-height: 55px;
+		border-bottom: 1px solid #0a0a0a;
+    }
+
+    .layui-layer-close{
+        width:20px !important;
+        height:20px !important;
+        background:url(../image/layer-close.png) no-repeat left top !important;
+        top:3px!important;
+        right:5px!important;
+    }
+    
+    .layui-layer-btn{
+        text-align: center;
+        padding:30px 20px;
+		
+		a{
+			display: inline-block;
+		    text-align: center;
+		    cursor: pointer;
+		    touch-action: manipulation;
+		    vertical-align: middle;
+		    overflow: hidden;
+		    white-space: nowrap;
+		    user-select: none;
+		    background: #DF0338;
+		    height: 38px;
+		    line-height: 38px;
+		    padding: 0 20px;
+		    color: #fff;
+		    border-radius: 3px;
+		    box-shadow: 1px 2px 5px 1px rgba(#000,.3);
+		    transition: all .5s ease;
+		    border: 0;
+			margin:0 6px;
+
+		    &:hover,
+		    &:focus,
+		    &.focus,{
+		        text-decoration: none;
+		        background: darken(#DF0338,3%);
+		    }
+		    
+		    &:active,
+		    &.active{
+		        
+		    }
+
+		    &[disabled],
+		    &.disabled{
+		        cursor: not-allowed;
+		        pointer-events: none;
+		        filter:grayscale(1);
+		        opacity:.65;
+		    }
+			
+			&.layui-layer-btn1{
+		        background-color:#8772ab;
+		        
+		        &:hover{
+		            background-color:darken(#8772ab,5%);
+		        }
+		    }
+		}
+    }
+}
+
+
+
+@media screen and (max-width:1600px){
+	
+    
+	html .layui-layer{
+		
+		&.layui-layer-dialog,
+		&.layui-layer-page{
+			
+			.layui-layer-content{
+				max-height: 610px;
+			}
+			
+		}
+		
+        
+    }
+}
+
+@media screen and (max-width:1366px){
+
+    
+	
+	html .layui-layer{
+		
+		&.layui-layer-dialog,
+		&.layui-layer-page{
+			
+			.layui-layer-content{
+				max-height: 478px;
+			}
+		}
+		
+        
+    }
+}
+
+
+/**
+* datepicker
+*/
+html{
+	
+		
+	.datepicker{
+	    width:300px;
+	    background-color:#192635!important;
+	    color:#97ADC5!important;
+	    
+	    &.datepicker-orient-bottom:after{
+	        border-bottom-color: #192635!important;
+	    }
+
+	    &.datepicker-orient-top:after{
+	        border-top-color: #192635!important;
+	    }
+	}
+
+	.datepicker table .decade.focused,
+	.datepicker table .century.focused,
+	.datepicker table .year.focused,
+	.datepicker table .month.focused,
+	.datepicker table .day.focused,
+	.datepicker table .decade:hover,
+	.datepicker table .century:hover,
+	.datepicker table .year:hover,
+	.datepicker table .month:hover,
+	.datepicker table .day:hover {
+	    background-color:#172C40!important;
+	    background-image:none!important;
+	    color: #97ADC5!important;
+	}
+
+	.datepicker .prev:hover,
+	.datepicker .next:hover,
+	.datepicker .datepicker-switch:hover{
+	    background-color:#172C40!important;
+	}
+	
+	.datepicker table .decade.active,
+	.datepicker table .century.active,
+	.datepicker table .year.active,
+	.datepicker table .month.active,
+	.datepicker table .day.active{
+		background: #32304A!important;	
+	}
+
+	.datetimepicker{
+	    width:300px;
+	    background-color:#192635!important;
+	    color:#97ADC5!important;
+
+	    &:after{
+	        border-bottom-color: #192635!important;
+	    }
+	}
+
+	
+	.datetimepicker table .year:hover,
+	.datetimepicker table .month:hover,
+	.datetimepicker table .day:hover, 
+	.datetimepicker table .hour:hover,
+	.datetimepicker table .minute:hover, {
+	    background-color:#172C40!important;
+	    background-image:none!important;
+	    color: #97ADC5!important;
+	}
+
+	.datetimepicker .prev:hover,
+	.datetimepicker .next:hover,
+	.datetimepicker .switch:hover{
+	    background-color:#172C40!important;
+
+	    
+	}
+	
+	.datetimepicker table .year.active,
+	.datetimepicker table .month.active,
+	.datetimepicker table .day.active, 
+	.datetimepicker table .hour.active, 
+	.datetimepicker table .minute.active{
+		background: #32304A!important;	
+	}
+
+}
+
+
+
+

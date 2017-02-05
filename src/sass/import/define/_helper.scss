@@ -1,0 +1,117 @@
+@charset "utf-8";
+
+//浮动
+.pull-left{float: left;}
+.pull-right{float: right;}
+
+//定位
+.pos-rel{position: relative;}
+.pos-abs{position: absolute;}
+.pos-fix{position: fixed;}
+
+//隐藏
+.hide-real{display: none;}
+.hide-fake{clip: rect(1px,1px,1px,1px);}
+
+//显示
+.show-block{display: block;}
+.show-inblock{display: inline-block;}
+
+//水平排列
+.text-left{text-align: left;}
+.text-center{text-align: center;}
+.text-right{text-align: right;}
+
+//垂直排列
+.vera-middle{vertical-align: middle;}
+
+//文本修饰
+.deco-through{text-decoration: line-through;}
+.deco-under{text-decoration: underline;}
+.deco-none{text-decoration: none;}
+
+//文本粗细
+.font-bold{font-weight: bold;}
+
+//文本截断
+.text-ellipsis{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow:ellipsis;
+}
+
+//圆形圆角
+.radius-round{border-radius: 100%;}
+
+//宽度百分百
+.width-p100{
+    width: 100%;
+}
+
+//范围滚动
+.range-scroll{
+    @include oya;
+    
+}
+
+//清除浮动
+.clearfix{
+    
+    *zoom:1;
+
+    &:after{
+        content:"\20";
+        display:block;
+        height:0;
+        clear:both;
+    }
+}
+
+.clear{
+    clear: both;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    visibility: hidden;
+    overflow: hidden;
+}
+
+//图片精灵
+.sprite{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+//字号
+@for $i from 12 through 24{
+    @if $i % 2 == 0 {
+        .fs-#{$i}{
+            font-size: #{$i}px;
+        }
+    }
+}
+
+//外边距
+@for $i from 5 through 30{
+    @if $i % 5 == 0 {
+        .ml-#{$i}{
+            margin-left: #{$i}px;
+        }
+
+        .mt-#{$i}{
+            margin-top: #{$i}px;
+        }
+
+        .mb-#{$i}{
+            margin-bottom: #{$i}px;
+        }
+
+        .mr-#{$i}{
+            margin-right: #{$i}px;
+        }
+
+    }
+
+}
+

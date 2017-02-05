@@ -1,0 +1,68 @@
+@charset "utf-8";
+
+//透明背景(注意:在IE8中如果对伪类使用会无效,filter在IE8下会对JS造成一些Bug)
+@mixin bg-glass($color,$percent){
+
+    $normal-color : rgba($color,$percent);
+    $hex-color : ie-hex-str($normal-color);
+    background:$normal-color;
+    
+    @at-root .no-canvas #{&}{
+        filter:progid:DXImageTransform.Microsoft.gradient(startcolorstr=#{$hex-color},endcolorstr=#{$hex-color});
+    }
+}
+
+
+@mixin root($name) {
+    @at-root .#{$name} {
+        @content;
+    }
+}
+
+@mixin has($name) {
+    .#{$name} {
+        @content;
+    }
+}
+
+@mixin omit{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow:ellipsis;
+}
+
+
+//垂直居中
+@mixin cy{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+//水平居中
+@mixin cx{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+//居中
+@mixin cxy{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+}
+
+@mixin oya{
+    overflow: auto;
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+
+@mixin oxa{
+    overflow: auto;
+    overflow-y:hidden;
+    overflow-x:auto;
+}
+

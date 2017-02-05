@@ -1,0 +1,120 @@
+@charset "utf-8";
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    background:#14131E;
+    color:#cfcfd6;
+    min-width:1024px;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-focus-ring-color:rgba(0,0,0,0);
+    -webkit-touch-callout: none;
+    font:14px/1.5 'Proxima',Arial,Helvetica,"Helvetica Neue",Tahoma,sans-serif;
+}
+
+@font-face {
+    font-family: "Proxima";
+    src: url("../font/ProximaNova-Regular.eot"); /* IE9 */
+    src: url("../font/ProximaNova-Regular.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("../font/ProximaNova-Regular.woff") format("woff"), /* chrome, firefox */
+    url("../font/ProximaNova-Regular.ttf") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url("../font/ProximaNova-Regular.svg#Proxima Nova Rg") format("svg"); /* iOS 4.1- */
+    font-style: normal;
+    font-weight: normal;
+}
+
+a{
+    color:#cfcfd6;
+    text-decoration: none;
+
+    &:hover{
+        color:#fff;
+        text-decoration: underline;
+    }
+}
+
+ul,ol,li{
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+
+dl,dt,dd{
+    margin:0;
+    padding:0;
+}
+
+h1,h2,h3,h4,h5,h6,p{
+    margin:0;
+    font-weight: normal;
+    font-size: inherit;
+}
+
+input,button,select,textarea{
+    font:inherit;
+}
+
+img{
+    -ms-interpolation-mode:bicubic;
+    max-width:100%;
+}
+
+table{
+    table-layout:fixed;
+    width:100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+td,th{
+    word-wrap:break-word;
+    text-align: left;
+}
+
+pre{
+    white-space:pre;
+    white-space:pre-wrap;
+    word-wrap: break-word;
+}
+
+textarea{
+    width:100%;
+    resize:vertical;
+}
+
+::placeholder{
+    color:#999999!important;
+}
+
+:focus{
+    outline:0;
+}
+
+::-ms-reveal,
+::-ms-clear,
+::-webkit-resizer {
+    display: none;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background:#F1F3F9; //轨道
+}
+
+::-webkit-scrollbar-thumb {
+    min-height: 20px;
+    background-clip: content-box;
+    background:#A2A2A2; //滑块
+}
+
+::-webkit-scrollbar-corner {
+    background: #F1F3F9;
+}

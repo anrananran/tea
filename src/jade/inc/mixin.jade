@@ -1,0 +1,72 @@
+mixin meta(device)
+    if device == 'desktop'
+        meta(charset="utf-8")
+        meta(http-equiv="X-UA-Compatible",content="IE=edge,chrome=1")
+        meta(name="renderer",content="webkit")
+        meta(name="keywords",content="")
+        meta(name="description", content="")
+        title desktop
+    else
+        meta(charset="utf-8")
+        meta(name="keywords",content="")
+        meta(name="description", content="")
+        meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
+        meta(name="apple-mobile-web-app-capable",content="yes")
+        meta(content="black",name="apple-mobile-web-app-status-bar-style")
+        meta(content="telephone=no",name="format-detection")
+        title mobile
+        
+mixin link() 
+    link(rel="stylesheet",href="static/css/public.css")
+    
+mixin script()
+    script(src="static/js/import/jquery/1.11.1/jquery.js")
+    <!--[if lte IE 8]><script src="static/js/import/polyfill/html5shiv.js"></script><script src="static/js/import/polyfill/respond.js"></script><script src="static/js/import/polyfill/selectivizr.js"></script><![endif]-->
+    <!--[if lte IE 9]><script src="static/js/import/polyfill/placeholder.js"></script><![endif]-->
+    script(src="static/js/public.js")
+    
+
+mixin header(type)
+    //整站头部
+    header#header
+        
+        
+    //整站头部 end 
+
+
+
+mixin footer(type)
+    //整站底部
+    footer#footer
+        
+        
+    //整站底部 end
+
+mixin page-bar()
+    //分页
+    nav.page-bar
+        ul.pages 
+            li
+                a(href="#") &laquo;
+            li
+                a(href="#") 1
+            li
+                a(href="#") 2
+            li
+                span.active 3
+            li
+                a(href="#") 4
+            li
+                span ...
+            li
+                a(href="#") 12
+            li
+                a(href="#") &raquo;
+        span.jump
+            | Go to page 
+            input.input.ele-input(type="text",value="1")
+            input.ok.ele-btn.is-primary(type="button",value="Go")
+                
+
+        
+    //分页 end

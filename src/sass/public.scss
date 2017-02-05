@@ -1,0 +1,49 @@
+@charset "utf-8";
+
+@import "import/base/normalize";                //样式统一
+@import "import/base/reset";                    //样式重置
+
+@import "import/define/function";               //函数
+@import "import/define/mixin";                  //混合宏
+@import "import/define/helper";                 //助手类
+
+@import "import/icon/font";                     //字符图标
+@import "import/icon/sprite";                   //精灵图标
+
+@import "import/system/display";                //响应式显示
+@import "import/system/grid";                   //响应式栅格
+
+@import "import/anime";                         //动画
+@import "import/color";                         //颜色
+@import "import/ele";                           //元素
+@import "import/skin";                          //修改插件皮肤
+
+
+
+.wrapper{
+    width:1200px;
+    margin:0 auto;
+    position: relative;
+}
+
+.pop{
+    display: none;
+}
+
+#page{
+    
+}
+
+#header{
+    
+    
+}
+
+#inner{
+    
+}
+
+#footer{
+    
+}
+

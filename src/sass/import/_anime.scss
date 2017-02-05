@@ -1,0 +1,43 @@
+@charset "utf-8";
+
+@keyframes scale-in-ease {
+    0% {
+        opacity: 0;
+        transform: scale(0)
+    }
+
+    50% {
+        transform: scale(1.1)
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) perspective(1200px);
+    }
+}
+
+@keyframes scale-out {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(.8);
+    }
+}
+
+
+@keyframes rotate-circles {
+    0% {
+        
+        transform: rotate(0);
+        
+    }
+
+    100% {
+        
+        transform: rotate(360deg);
+    }
+}

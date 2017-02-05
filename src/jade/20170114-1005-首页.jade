@@ -1,0 +1,32 @@
+doctype html
+html.no-js
+
+    include ./inc/mixin.jade
+    
+    head
+        //- 设备设置 desktop | mobile
+        +meta('desktop') 
+        
+        //- 引入公共css文件
+        +link()
+        //- 引入页面css文件
+        link(rel="stylesheet",href="static/css/index.css")
+        
+        //- 引入公共js文件
+        +script()
+        //- 引入页面js文件
+        
+        
+    body
+        
+        div#page
+            
+            +header()
+            
+        
+            div#inner
+                
+            
+            +footer()
+            
+    
