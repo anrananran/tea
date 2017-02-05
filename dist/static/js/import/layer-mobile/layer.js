@@ -1,2 +1,217 @@
-/*! layer mobile-v2.0 弹层组件移动版 License LGPL http://layer.layui.com/mobile By 贤心 */
-;!function(a){"use strict";var b=document,c="querySelectorAll",d="getElementsByClassName",e=function(a){return b[c](a)},f={type:0,shade:!0,shadeClose:!0,fixed:!0,anim:"scale"},g={extend:function(a){var b=JSON.parse(JSON.stringify(f));for(var c in a)b[c]=a[c];return b},timer:{},end:{}};g.touch=function(a,b){a.addEventListener("click",function(a){b.call(this,a)},!1)};var h=0,i=["layui-m-layer"],j=function(a){var b=this;b.config=g.extend(a),b.view()};j.prototype.view=function(){var a=this,c=a.config,f=b.createElement("div");a.id=f.id=i[0]+h,f.setAttribute("class",i[0]+" "+i[0]+(c.type||0)),f.setAttribute("index",h);var g=function(){var a="object"==typeof c.title;return c.title?'<h3 style="'+(a?c.title[1]:"")+'">'+(a?c.title[0]:c.title)+"</h3>":""}(),j=function(){"string"==typeof c.btn&&(c.btn=[c.btn]);var a,b=(c.btn||[]).length;return 0!==b&&c.btn?(a='<span yes type="1">'+c.btn[0]+"</span>",2===b&&(a='<span no type="0">'+c.btn[1]+"</span>"+a),'<div class="layui-m-layerbtn">'+a+"</div>"):""}();if(c.fixed||(c.top=c.hasOwnProperty("top")?c.top:100,c.style=c.style||"",c.style+=" top:"+(b.body.scrollTop+c.top)+"px"),2===c.type&&(c.content='<i></i><i class="layui-m-layerload"></i><i></i><p>'+(c.content||"")+"</p>"),c.skin&&(c.anim="up"),"msg"===c.skin&&(c.shade=!1),f.innerHTML=(c.shade?"<div "+("string"==typeof c.shade?'style="'+c.shade+'"':"")+' class="layui-m-layershade"></div>':"")+'<div class="layui-m-layermain" '+(c.fixed?"":'style="position:static;"')+'><div class="layui-m-layersection"><div class="layui-m-layerchild '+(c.skin?"layui-m-layer-"+c.skin+" ":"")+(c.className?c.className:"")+" "+(c.anim?"layui-m-anim-"+c.anim:"")+'" '+(c.style?'style="'+c.style+'"':"")+">"+g+'<div class="layui-m-layercont">'+c.content+"</div>"+j+"</div></div></div>",!c.type||2===c.type){var k=b[d](i[0]+c.type),l=k.length;l>=1&&layer.close(k[0].getAttribute("index"))}document.body.appendChild(f);var m=a.elem=e("#"+a.id)[0];c.success&&c.success(m),a.index=h++,a.action(c,m)},j.prototype.action=function(a,b){var c=this;a.time&&(g.timer[c.index]=setTimeout(function(){layer.close(c.index)},1e3*a.time));var e=function(){var b=this.getAttribute("type");0==b?(a.no&&a.no(),layer.close(c.index)):a.yes?a.yes(c.index):layer.close(c.index)};if(a.btn)for(var f=b[d]("layui-m-layerbtn")[0].children,h=f.length,i=0;h>i;i++)g.touch(f[i],e);if(a.shade&&a.shadeClose){var j=b[d]("layui-m-layershade")[0];g.touch(j,function(){layer.close(c.index,a.end)})}a.end&&(g.end[c.index]=a.end)},a.layer={v:"2.0",index:h,open:function(a){var b=new j(a||{});return b.index},close:function(a){var c=e("#"+i[0]+a)[0];c&&(c.innerHTML="",b.body.removeChild(c),clearTimeout(g.timer[a]),delete g.timer[a],"function"==typeof g.end[a]&&g.end[a](),delete g.end[a])},closeAll:function(){for(var a=b[d](i[0]),c=0,e=a.length;e>c;c++)layer.close(0|a[0].getAttribute("index"))}},"function"==typeof define?define(function(){return layer}):function(){var a=document.scripts,c=a[a.length-1],d=c.src,e=d.substring(0,d.lastIndexOf("/")+1);c.getAttribute("merge")||document.head.appendChild(function(){var a=b.createElement("link");return a.href=e+"need/layer.css?2.0",a.type="text/css",a.rel="styleSheet",a.id="layermcss",a}())}()}(window);
+/*!
+
+ @Name：layer mobile v2.0 弹层组件移动版
+ @Author：贤心
+ @Site：http://layer.layui.com/mobie/
+ @License：LGPL
+    
+ */
+
+;!function(win){
+  
+"use strict";
+
+var doc = document, query = 'querySelectorAll', claname = 'getElementsByClassName', S = function(s){
+  return doc[query](s);
+};
+
+//默认配置
+var config = {
+  type: 0
+  ,shade: true
+  ,shadeClose: true
+  ,fixed: true
+  ,anim: 'scale' //默认动画类型
+};
+
+var ready = {
+  extend: function(obj){
+    var newobj = JSON.parse(JSON.stringify(config));
+    for(var i in obj){
+      newobj[i] = obj[i];
+    }
+    return newobj;
+  }, 
+  timer: {}, end: {}
+};
+
+//点触事件
+ready.touch = function(elem, fn){
+  elem.addEventListener('click', function(e){
+    fn.call(this, e);
+  }, false);
+};
+
+var index = 0, classs = ['layui-m-layer'], Layer = function(options){
+  var that = this;
+  that.config = ready.extend(options);
+  that.view();
+};
+
+Layer.prototype.view = function(){
+  var that = this, config = that.config, layerbox = doc.createElement('div');
+
+  that.id = layerbox.id = classs[0] + index;
+  layerbox.setAttribute('class', classs[0] + ' ' + classs[0]+(config.type || 0));
+  layerbox.setAttribute('index', index);
+  
+  //标题区域
+  var title = (function(){
+    var titype = typeof config.title === 'object';
+    return config.title
+    ? '<h3 style="'+ (titype ? config.title[1] : '') +'">'+ (titype ? config.title[0] : config.title)  +'</h3><button class="layermend"></button>'
+    : '';
+  }());
+  
+  //按钮区域
+  var button = (function(){
+    typeof config.btn === 'string' && (config.btn = [config.btn]);
+    var btns = (config.btn || []).length, btndom;
+    if(btns === 0 || !config.btn){
+      return '';
+    }
+    btndom = '<span yes type="1">'+ config.btn[0] +'</span>'
+    if(btns === 2){
+      btndom = '<span no type="0">'+ config.btn[1] +'</span>' + btndom;
+    }
+    return '<div class="layui-m-layerbtn">'+ btndom + '</div>';
+  }());
+  
+  if(!config.fixed){
+    config.top = config.hasOwnProperty('top') ?  config.top : 100;
+    config.style = config.style || '';
+    config.style += ' top:'+ ( doc.body.scrollTop + config.top) + 'px';
+  }
+  
+  if(config.type === 2){
+    config.content = '<i></i><i class="layui-m-layerload"></i><i></i><p>'+ (config.content||'') +'</p>';
+  }
+  
+  if(config.skin) config.anim = 'up';
+  if(config.skin === 'msg') config.shade = false;
+  
+  layerbox.innerHTML = (config.shade ? '<div '+ (typeof config.shade === 'string' ? 'style="'+ config.shade +'"' : '') +' class="layui-m-layershade"></div>' : '')
+  +'<div class="layui-m-layermain" '+ (!config.fixed ? 'style="position:static;"' : '') +'>'
+    +'<div class="layui-m-layersection">'
+      +'<div class="layui-m-layerchild '+ (config.skin ? 'layui-m-layer-' + config.skin + ' ' : '') + (config.className ? config.className : '') + ' ' + (config.anim ? 'layui-m-anim-' + config.anim : '') +'" ' + ( config.style ? 'style="'+config.style+'"' : '' ) +'>'
+        + title
+        +'<div class="layui-m-layercont">'+ config.content +'</div>'
+        + button
+      +'</div>'
+    +'</div>'
+  +'</div>';
+  
+  if(!config.type || config.type === 2){
+    var dialogs = doc[claname](classs[0] + config.type), dialen = dialogs.length;
+    if(dialen >= 1){
+      layer.close(dialogs[0].getAttribute('index'))
+    }
+  }
+  
+  document.body.appendChild(layerbox);
+  var elem = that.elem = S('#'+that.id)[0];
+  config.success && config.success(elem);
+  
+  that.index = index++;
+  that.action(config, elem);
+};
+
+Layer.prototype.action = function(config, elem){
+  var that = this;
+  
+  //自动关闭
+  if(config.time){
+    ready.timer[that.index] = setTimeout(function(){
+      layer.close(that.index);
+    }, config.time*1000);
+  }
+
+  //关闭按钮
+	if(config.title){
+		var end = elem[claname]('layermend')[0], endfn = function(){
+			config.cancel && config.cancel();
+			layer.close(that.index);
+		};
+		ready.touch(end, endfn);
+	}
+  
+  //确认取消
+  var btn = function(){
+    var type = this.getAttribute('type');
+    if(type == 0){
+      config.no && config.no();
+      layer.close(that.index);
+    } else {
+      config.yes ? config.yes(that.index) : layer.close(that.index);
+    }
+  };
+  if(config.btn){
+    var btns = elem[claname]('layui-m-layerbtn')[0].children, btnlen = btns.length;
+    for(var ii = 0; ii < btnlen; ii++){
+      ready.touch(btns[ii], btn);
+    }
+  }
+  
+  //点遮罩关闭
+  if(config.shade && config.shadeClose){
+    var shade = elem[claname]('layui-m-layershade')[0];
+    ready.touch(shade, function(){
+      layer.close(that.index, config.end);
+    });
+  }
+
+  config.end && (ready.end[that.index] = config.end);
+};
+
+win.layer = {
+  v: '2.0',
+  index: index,
+  
+  //核心方法
+  open: function(options){
+    var o = new Layer(options || {});
+    return o.index;
+  },
+  
+  close: function(index){
+    var ibox = S('#'+classs[0]+index)[0];
+    if(!ibox) return;
+    ibox.innerHTML = '';
+    doc.body.removeChild(ibox);
+    clearTimeout(ready.timer[index]);
+    delete ready.timer[index];
+    typeof ready.end[index] === 'function' && ready.end[index]();
+    delete ready.end[index];
+  },
+  
+  //关闭所有layer层
+  closeAll: function(){
+    var boxs = doc[claname](classs[0]);
+    for(var i = 0, len = boxs.length; i < len; i++){
+      layer.close((boxs[0].getAttribute('index')|0));
+    }
+  }
+};
+
+'function' == typeof define ? define(function() {
+  return layer;
+}) : function(){
+  
+  var js = document.scripts, script = js[js.length - 1], jsPath = script.src;
+  var path = jsPath.substring(0, jsPath.lastIndexOf("/") + 1);
+  
+  //如果合并方式，则需要单独引入layer.css
+  if(script.getAttribute('merge')) return; 
+  
+  document.head.appendChild(function(){
+    var link = doc.createElement('link');
+    link.href = path + 'need/layer.css?2.0';
+    link.type = 'text/css';
+    link.rel = 'styleSheet'
+    link.id = 'layermcss';
+    return link;
+  }());
+  
+}();
+
+}(window);
