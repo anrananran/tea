@@ -7,39 +7,51 @@
  */
  
  
-var fs = require('fs');
-var concat = require('gulp-concat');
-var gulp = require('gulp');
-var prettify = require('gulp-jsbeautifier');
-var rename = require('gulp-rename');
-var sass = require('gulp-sass');
-var autoprefixer = require('gulp-autoprefixer');
-var imagemin = require('gulp-imagemin');
-var pngquant = require('imagemin-pngquant');
-var watch = require('gulp-watch');
-var spritesmith = require('gulp.spritesmith');
-var merge = require('merge-stream');
-var csscomb = require('gulp-csscomb');
-var cssmin = require('gulp-cssmin');
-var fontmin = require('gulp-fontmin');
-var csslint = require('gulp-csslint');
-var jade = require('gulp-jade');
-var changedInPlace = require('gulp-changed-in-place');
-var rev = require('gulp-rev');
-var revReplace = require("gulp-rev-replace");
-var del = require('del');
-var revdel = require('gulp-rev-delete-original');
+const fs = require('fs');
+const path = require('path');
+const concat = require('gulp-concat');
+const gulp = require('gulp');
+const prettify = require('gulp-jsbeautifier');
+const rename = require('gulp-rename');
+const sass = require('gulp-sass');
+const autoprefixer = require('gulp-autoprefixer');
+const imagemin = require('gulp-imagemin');
+const pngquant = require('imagemin-pngquant');
+const watch = require('gulp-watch');
+const spritesmith = require('gulp.spritesmith');
+const merge = require('merge-stream');
+const csscomb = require('gulp-csscomb');
+const cssmin = require('gulp-cssmin');
+const fontmin = require('gulp-fontmin');
+const csslint = require('gulp-csslint');
+const jade = require('gulp-jade');
+const changedInPlace = require('gulp-changed-in-place');
+const rev = require('gulp-rev');
+const revReplace = require("gulp-rev-replace");
+const revFormat = require('gulp-rev-format');
+const del = require('del');
+const revdel = require('gulp-rev-delete-original');
+const gulpIgnore = require('gulp-ignore');
+const md5 = require('blueimp-md5');
 
-var root = './';//项目文件路径
-var path = {
+const root = './';//项目文件路径
+const dev_path = {
     src : root + 'src/', //源码目录,
     dist : root + 'dist/' //构建目标目录
 };
 
+const config_path = dev_path.src + 'js/config.js';
+
+const manifest_root = dev_path.src + 'manifest/';
+
 gulp.task('default',[
     'jade',
     'html',
-    'js',
+    'js-copy',
+    'js-rev',
+    'js-vendor',
+    'js-polyfill',
+    'css-vendor',
     'copyicon',
     'imagemin',
     'sprite-rev',
@@ -50,9 +62,13 @@ gulp.task('default',[
 //jade编译
 gulp.task('jade',['sass'],function(){
 
-    var manifest = gulp.src(path.dist + 'static/css/rev-manifest.json');
+    var manifest_css_sass = gulp.src(manifest_root + 'css/rev-manifest-sass.json');
+    var manifest_css_vendor = gulp.src(manifest_root + 'css/rev-manifest-vendor.json');
+    var manifest_js_vendor = gulp.src(manifest_root + 'js/rev-manifest-vendor.json');
+    var manifest_js_polyfill = gulp.src(manifest_root + 'js/rev-manifest-polyfill.json');
+    var manifest_js = gulp.src(manifest_root + 'js/rev-manifest-js.json');
 
-    return gulp.src(path.src + 'jade/*.jade')
+    return gulp.src(dev_path.src + 'jade/*.jade')
         .pipe(changedInPlace({
             firstPass :true
         }))
@@ -64,22 +80,34 @@ gulp.task('jade',['sass'],function(){
             unformatted: [] //默认行内元素不换行，这里传一个空数组是为了覆盖默认值
         }))
         .pipe(rename(function (path) {
-            path.basename = "build-" + path.basename;
+            path.basename = "jade-" + path.basename;
             return path;
         }))
         .pipe(revReplace({
-            manifest: manifest
+            manifest: manifest_css_sass
         }))
-        .pipe(gulp.dest(path.dist));
+        .pipe(revReplace({
+            manifest: manifest_css_vendor
+        }))
+        .pipe(revReplace({
+            manifest: manifest_js_vendor
+        }))
+        .pipe(revReplace({
+            manifest: manifest_js_polyfill
+        }))
+        .pipe(revReplace({
+            manifest: manifest_js
+        }))
+        .pipe(gulp.dest(dev_path.dist));
 });
 
 
 //由于gulp-changed-in-place的功能有限，所以为inc文件新建了一个监听任务
 gulp.task('jade-inc',function(){
 
-	var manifest = gulp.src(path.dist + 'static/css/rev-manifest.json');
+	var manifest_css_sass = gulp.src(manifest_root + 'css/rev-manifest-sass.json');
 
-    return gulp.src(path.src + 'jade/*.jade')
+    return gulp.src(dev_path.src + 'jade/*.jade')
         .pipe(jade())
         .pipe(prettify({
             indentSize: 4,//缩进次数，默认缩进字符为空格
@@ -88,34 +116,35 @@ gulp.task('jade-inc',function(){
             unformatted: [] //默认行内元素不换行，这里传一个空数组是为了覆盖默认值
         }))
         .pipe(rename(function (path) {
-            path.basename = "build-" + path.basename;
+            console.log('编译:'+path);
+            path.basename = "jade-" + path.basename;
             return path;
         }))
 		.pipe(revReplace({
-            manifest: manifest
+            manifest: manifest_css_sass
         }))
-        .pipe(gulp.dest(path.dist));
+        .pipe(gulp.dest(dev_path.dist));
 });
 
 //复制非jade的html文件
 gulp.task('html',function(){
-    return gulp.src(path.src + 'html/**/*')
+    return gulp.src(dev_path.src + 'html/**/*')
       .pipe(changedInPlace({
           firstPass :true
       }))
       .pipe(rename(function (path) {
-          path.basename = "noJade-" + path.basename;
+          path.basename = "html-" + path.basename;
           return path;
       }))
-      .pipe(gulp.dest(path.dist))
+      .pipe(gulp.dest(dev_path.dist))
 });
 
 //sass编译
 gulp.task('sass',['clean-css'],function () {
 
-    var manifest = gulp.src(path.dist + 'static/image/rev-manifest.json');
+    var manifest = gulp.src(manifest_root + 'image/rev-manifest.json');
 
-    return gulp.src(path.src + 'sass/*.scss')
+    return gulp.src(dev_path.src + 'sass/*.scss')
     .pipe(sass({
         //outputStyle: 'compressed'
     }).on('error', sass.logError))
@@ -135,34 +164,115 @@ gulp.task('sass',['clean-css'],function () {
         restructuring:false//关闭选择器重组(此选项在classname名字过长时开启反而会增加文件体积)
     }))
     .pipe(rev())
-    .pipe(gulp.dest(path.dist + 'static/css'))
-    .pipe(rev.manifest())
-    .pipe(gulp.dest(path.dist + 'static/css'));
+    .pipe(gulp.dest(dev_path.dist + 'static/css'))
+    .pipe(rev.manifest('rev-manifest-sass.json'))
+    .pipe(gulp.dest(manifest_root + 'css'));
 });
 
 gulp.task('clean-css', function () {
     return del([
-         path.dist + 'static/css'
+         dev_path.dist + 'static/css'
     ],{
         force : true
     });
 });
 
 
-//js
-gulp.task('js',function(){
-    return gulp.src(path.src + 'js/**/*')
+//第三方库合并
+gulp.task('js-copy',function(){
+    
+    return gulp.src([dev_path.src + 'js/**/*','!' + dev_path.src + 'js/*.js'])
       .pipe(changedInPlace({
           firstPass :true
       }))
-      .pipe(gulp.dest(path.dist + 'static/js'))
+      .pipe(gulp.dest(dev_path.dist + 'static/js'))
+});
+
+gulp.task('js-rev',function(){
+    
+    return gulp.src(dev_path.src + 'js/*.js')
+      .pipe(changedInPlace({
+          firstPass :true
+      }))
+      .pipe(rev())
+      .pipe(gulp.dest(dev_path.dist + 'static/js'))
+      .pipe(rev.manifest('rev-manifest-js.json'))
+      .pipe(gulp.dest(manifest_root + 'js'));
 });
 
 
+gulp.task('js-vendor',function(){
+    
+    delete require.cache[require.resolve(config_path)];
+    var MERGE_CONFIG = require(config_path);
+    
+    var JS_FILE = [];
+    
+    for(var i = 0;i < MERGE_CONFIG.JS_FILE.length; i++){
+        var file = path.join(dev_path.src ,  MERGE_CONFIG.ROOT_PATH , MERGE_CONFIG.JS_FILE[i]);
+        console.log('正在合并:' + file);
+        JS_FILE.push(file);
+    }
+    
+    return gulp.src(JS_FILE)
+      .pipe(concat('vendor.js'))
+      .pipe(rev())
+      .pipe(gulp.dest(dev_path.dist + 'static/js'))
+      .pipe(rev.manifest('rev-manifest-vendor.json'))
+      .pipe(gulp.dest(manifest_root + 'js'));
+});
+
+gulp.task('js-polyfill',function(){
+    
+    delete require.cache[require.resolve(config_path)];
+    var MERGE_CONFIG = require(config_path);
+    
+    var POLYFILL_FILE = [];
+    
+    for(var i = 0;i < MERGE_CONFIG.POLYFILL_FILE.length; i++){
+        var file = path.join(dev_path.src ,  MERGE_CONFIG.ROOT_PATH , MERGE_CONFIG.POLYFILL_FILE[i]);
+        console.log('正在合并:' + file);
+        POLYFILL_FILE.push(file);
+    }
+    
+    return gulp.src(POLYFILL_FILE)
+      .pipe(concat('polyfill.js'))
+      .pipe(rev())
+      .pipe(gulp.dest(dev_path.dist + 'static/js'))
+      .pipe(rev.manifest('rev-manifest-polyfill.json'))
+      .pipe(gulp.dest(manifest_root + 'js'));
+});
+
+gulp.task('css-vendor',function(){
+    
+    delete require.cache[require.resolve(config_path)];
+    var MERGE_CONFIG = require(config_path);
+    
+    var CSS_FILE = [];
+    
+    for(var i = 0;i < MERGE_CONFIG.CSS_FILE.length; i++){
+        var file = path.join(dev_path.src ,  MERGE_CONFIG.ROOT_PATH , MERGE_CONFIG.CSS_FILE[i]);
+        console.log('正在合并:' + file);
+        CSS_FILE.push(file);
+    }
+    
+    return gulp.src(CSS_FILE)
+      .pipe(concat('vendor.css'))
+      .pipe(cssmin({
+          advanced :true, //开启智能压缩
+          keepSpecialComments:0,//移除所有注释
+          restructuring:false//关闭选择器重组(此选项在classname名字过长时开启反而会增加文件体积)
+      }))
+      .pipe(rev())
+      .pipe(gulp.dest(dev_path.dist + 'static/css'))
+      .pipe(rev.manifest('rev-manifest-vendor.json'))
+      .pipe(gulp.dest(manifest_root + 'css'));
+});
+
 //图标字体拷贝
 gulp.task('copyicon',function(){
-    return gulp.src(path.src + 'icon/**/*')
-      .pipe(gulp.dest(path.dist + 'static/icon'))
+    return gulp.src(dev_path.src + 'icon/**/*')
+      .pipe(gulp.dest(dev_path.dist + 'static/icon'))
 });
 
 
@@ -171,7 +281,7 @@ gulp.task('copyicon',function(){
  * 图片优化压缩
  */
  gulp.task('imagemin', function(){
-    return gulp.src([path.src + 'image/**/*','!'+path.src + 'image/sprite/**/*'])
+    return gulp.src([dev_path.src + 'image/**/*','!'+dev_path.src + 'image/sprite/**/*'])
         .pipe(changedInPlace({
             firstPass:true
         }))
@@ -184,7 +294,7 @@ gulp.task('copyicon',function(){
             ],
             use: [pngquant()]
         }))
-        .pipe(gulp.dest(path.dist + 'static/image'));
+        .pipe(gulp.dest(dev_path.dist + 'static/image'));
  });
 
 
@@ -195,7 +305,7 @@ gulp.task('copyicon',function(){
 
  gulp.task('sprite', function () {
 
-     var spritePath = path.src + 'image/sprite';
+     var spritePath = dev_path.src + 'image/sprite';
      var pa = fs.readdirSync(spritePath);
      var dirs = [];
      pa.forEach(function(ele,index){
@@ -229,7 +339,7 @@ gulp.task('copyicon',function(){
      var imgStream = [];
      var cssStream = [];
      for(var i=0;i<spriteData.length;i++){
-         var _imgStream = spriteData[i].img.pipe(gulp.dest(path.src + 'image/sprite'));
+         var _imgStream = spriteData[i].img.pipe(gulp.dest(dev_path.src + 'image/sprite'));
          var _cssStream = spriteData[i].css;
          imgStream.push(_imgStream);
          cssStream.push(_cssStream);
@@ -241,7 +351,7 @@ gulp.task('copyicon',function(){
            path.extname = '.scss';
            return path;
       }))
-     .pipe(gulp.dest(path.src + 'sass/import/icon'));
+     .pipe(gulp.dest(dev_path.src + 'sass/import/icon'));
 
      imgStream.push(mainCssSteam);
 
@@ -251,23 +361,23 @@ gulp.task('copyicon',function(){
 
   gulp.task('sprite-rev',['sprite'],function () {
 
-     return gulp.src(path.src + 'image/sprite/sprite-*.png')
+     return gulp.src(dev_path.src + 'image/sprite/sprite-*.png')
      .pipe(rev())
      .pipe(revdel())
-     .pipe(gulp.dest(path.dist + 'static/image'))
+     .pipe(gulp.dest(dev_path.dist + 'static/image'))
      .pipe(rev.manifest())
-     .pipe(gulp.dest(path.dist + 'static/image'));
+     .pipe(gulp.dest(manifest_root + 'image'));
  });
 
 /**
  * 外部字体转换
  */
 gulp.task('fontmin',function(){
-    return gulp.src(path.src + 'font/*')
+    return gulp.src(dev_path.src + 'font/*')
         // .pipe(fontmin({
         //     fontPath:'../font/'
         // }))
-        .pipe(gulp.dest(path.dist + 'static/font'));
+        .pipe(gulp.dest(dev_path.dist + 'static/font'));
 });
 
 
@@ -279,7 +389,7 @@ gulp.task('fontmin',function(){
 gulp.task('watch', function () {
 
     //监控jade文件
-    watch(path.src + 'jade/*.jade',{
+    watch(dev_path.src + 'jade/*.jade',{
         usePolling: true,
         readDelay:10
     },function(vinyl){
@@ -289,7 +399,7 @@ gulp.task('watch', function () {
     });
 
     //监控jade-inc文件
-    watch(path.src + 'jade/inc/**/*.jade',{
+    watch(dev_path.src + 'jade/inc/**/*.jade',{
         usePolling: true,
         readDelay:10
     },function(vinyl){
@@ -300,7 +410,7 @@ gulp.task('watch', function () {
 
 
     //监控sass文件
-    watch(path.src + 'sass/**/*.scss',{
+    watch(dev_path.src + 'sass/**/*.scss',{
         usePolling: true,
         readDelay:1000
     },function(vinyl){
@@ -309,16 +419,27 @@ gulp.task('watch', function () {
     });
 
     //监控js文件
-    watch(path.src + 'js/**/*.js',{
+    watch([dev_path.src + 'js/**/*.js','!' + dev_path.src + 'js/config.js'],{
         usePolling: true,
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('js');
+        gulp.start('js-copy');
+        gulp.start('js-rev');
+    });
+    
+    watch(dev_path.src + 'js/config.js',{
+        usePolling: true,
+        readDelay:1000
+    },function(vinyl){
+        console.log('File ' + vinyl.path + ' was changed, running tasks...');
+        gulp.start('js-vendor');
+        gulp.start('css-vendor');
+        gulp.start('js-polyfill');
     });
 
     //监控图片文件
-    watch([path.src + 'image/**/*','!'+path.src + 'image/sprite/**/*'],{
+    watch([dev_path.src + 'image/**/*','!'+dev_path.src + 'image/sprite/**/*'],{
         usePolling: true,
         readDelay:1000
     },function(vinyl){
@@ -329,7 +450,7 @@ gulp.task('watch', function () {
     });
 
     //监控图标字体文件
-    watch(path.src + 'icon/**/*',{
+    watch(dev_path.src + 'icon/**/*',{
         usePolling: true,
         readDelay:1000
     },function(vinyl){
@@ -339,7 +460,7 @@ gulp.task('watch', function () {
 
 
     //监控外部字体文件
-    watch(path.src + 'font/**/*',{
+    watch(dev_path.src + 'font/**/*',{
         usePolling: true,
         readDelay:1000
     },function(vinyl){

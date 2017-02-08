@@ -16,14 +16,16 @@ mixin meta(device)
         meta(content="telephone=no",name="format-detection")
         title mobile
         
-mixin link() 
-    link(rel="stylesheet",href="static/css/public.css")
+mixin link(sty) 
+    link(rel="stylesheet",href="static/css/vendor.css")
+    link(rel="stylesheet",href="static/css/common.css")
+    if !!sty
+        link(rel="stylesheet",href="static/css/#{sty}.css")
+        
     
 mixin script()
-    script(src="static/js/import/jquery/1.11.1/jquery.js")
-    <!--[if lte IE 8]><script src="static/js/import/polyfill/html5shiv.js"></script><script src="static/js/import/polyfill/respond.js"></script><script src="static/js/import/polyfill/selectivizr.js"></script><![endif]-->
-    <!--[if lte IE 9]><script src="static/js/import/polyfill/placeholder.js"></script><![endif]-->
-    script(src="static/js/public.js")
+    script(src="static/js/vendor.js")
+    script(src="static/js/common.js")
     
 
 mixin header(type)
