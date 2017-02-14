@@ -352,6 +352,7 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
+        gulp.start('js-copy');
         gulp.start('js-vendor');
         gulp.start('css-vendor');
         gulp.start('js-polyfill');
