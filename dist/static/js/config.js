@@ -11,6 +11,9 @@ const MERGE_CONFIG = {
         'ua-parser/ua-parser.js',
         'isloading/isloading.js',
         'modernizr/modernizr.js',
+        'tabslet/tabslet.js',
+		'moment/moment.js',
+		'vue/2.1.10/vue.js',
    ],
    POLYFILL_FILE : [
         'polyfill/es5-shim.js',
