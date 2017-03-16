@@ -1,0 +1,28 @@
+.isloading-wrapper.isloading-right {
+    margin-left: 10px
+}
+
+.isloading-overlay {
+    position: relative;
+    text-align: center
+}
+
+.isloading-overlay .isloading-wrapper {
+    z-index: 9000;
+    top: 10%;
+    display: inline-block;
+    margin: 0 auto;
+    padding: 10px 20px;
+    border-radius: 4px;
+    background: #464545;
+    background-clip: padding-box
+}
+
+.isloading-overlay .isloading-wrapper i {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    margin-left: 10px;
+    vertical-align: middle;
+    background: url(../image/loader-spin.gif) no-repeat
+}

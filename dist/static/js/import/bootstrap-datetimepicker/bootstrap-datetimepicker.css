@@ -407,3 +407,30 @@
 .datetimepicker .next:after {
   content: "»";
 }
+
+
+
+
+html .datetimepicker {
+    width: 300px;
+    color: #97adc5!important;
+    background-color: #192635!important
+}
+
+html .datetimepicker:after {
+    border-bottom-color: #192635!important
+}
+
+html .datetimepicker table .day:hover,html .datetimepicker table .hour:hover,html .datetimepicker table .minute:hover,html .datetimepicker table .month:hover,html .datetimepicker table .year:hover {
+    color: #97adc5!important;
+    background-color: #172c40!important;
+    background-image: none!important
+}
+
+html .datetimepicker .next:hover,html .datetimepicker .prev:hover,html .datetimepicker .switch:hover {
+    background-color: #172c40!important
+}
+
+html .datetimepicker table .day.active,html .datetimepicker table .hour.active,html .datetimepicker table .minute.active,html .datetimepicker table .month.active,html .datetimepicker table .year.active {
+    background: #32304a!important
+}

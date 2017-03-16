@@ -3,6 +3,7 @@ const MERGE_CONFIG = {
     CSS_FILE : [
         'tooltipster/tooltipster.css',
         'layer/skin/default/layer.css',
+        'isloading/isloading.css',
     ],
     
     JS_FILE : [

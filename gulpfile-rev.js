@@ -281,7 +281,7 @@ gulp.task('copyicon',function(){
  * 图片优化压缩
  */
  gulp.task('imagemin', function(){
-    return gulp.src([dev_path.src + 'image/**/*','!'+dev_path.src + 'image/sprite/**/*'])
+    return gulp.src([dev_path.src + 'image/**/*','!'+dev_path.src + 'image/ico/**/*'])
         .pipe(changedInPlace({
             firstPass:true
         }))
@@ -305,7 +305,7 @@ gulp.task('copyicon',function(){
 
  gulp.task('sprite', function () {
 
-     var spritePath = dev_path.src + 'image/sprite';
+     var spritePath = dev_path.src + 'image/ico';
      var pa = fs.readdirSync(spritePath);
      var dirs = [];
      pa.forEach(function(ele,index){
@@ -320,14 +320,14 @@ gulp.task('copyicon',function(){
          (function(i){
              var dirName = dirs[i];
              var _spriteData = gulp.src(spritePath +"/"+ dirName + '/*.png').pipe(spritesmith({
-               imgName: 'sprite-'+ dirName +'.png',
-               cssName: 'sprite-'+ dirName +'.css',
-               imgPath: '../image/sprite-'+ dirName +'.png',
+               imgName: 'ico-'+ dirName +'.png',
+               cssName: '_'+ dirName +'.css',
+               imgPath: '../image/ico-'+ dirName +'.png',
                padding:5,
                cssOpts: {
                   cssSelector: function (sprite) {
 
-                      return '.sprite-' + dirName + '-' + sprite.name;
+                      return '.ico-' + dirName + '-' + sprite.name;
                   }
                }
              }));
@@ -339,21 +339,18 @@ gulp.task('copyicon',function(){
      var imgStream = [];
      var cssStream = [];
      for(var i=0;i<spriteData.length;i++){
-         var _imgStream = spriteData[i].img.pipe(gulp.dest(dev_path.src + 'image/sprite'));
-         var _cssStream = spriteData[i].css;
+         var _imgStream = spriteData[i].img.pipe(gulp.dest(dev_path.src + 'image/ico'));
+         var _cssStream = spriteData[i].css.pipe(rename(function (path) {
+                path.extname = '.scss';
+                return path;
+            }))
+            .pipe(gulp.dest(dev_path.src + 'sass/import/icon'));
          imgStream.push(_imgStream);
          cssStream.push(_cssStream);
      }
 
-     var mainCssSteam = merge.apply(this,cssStream)
-     .pipe(concat('_sprite.css'))
-     .pipe(rename(function (path) {
-           path.extname = '.scss';
-           return path;
-      }))
-     .pipe(gulp.dest(dev_path.src + 'sass/import/icon'));
-
-     imgStream.push(mainCssSteam);
+     
+     imgStream.push(cssStream);
 
      return merge.apply(this,imgStream);
  });
@@ -361,7 +358,7 @@ gulp.task('copyicon',function(){
 
   gulp.task('sprite-rev',['sprite'],function () {
 
-     return gulp.src(dev_path.src + 'image/sprite/sprite-*.png')
+     return gulp.src(dev_path.src + 'image/ico/ico-*.png')
      .pipe(rev())
      .pipe(revdel())
      .pipe(gulp.dest(dev_path.dist + 'static/image'))
@@ -439,7 +436,7 @@ gulp.task('watch', function () {
     });
 
     //监控图片文件
-    watch([dev_path.src + 'image/**/*','!'+dev_path.src + 'image/sprite/**/*'],{
+    watch([dev_path.src + 'image/**/*','!'+dev_path.src + 'image/ico/**/*'],{
         usePolling: true,
         readDelay:1000
     },function(vinyl){

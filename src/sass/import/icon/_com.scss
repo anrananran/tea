@@ -1,0 +1,35 @@
+/*
+Icon classes can be used entirely standalone. They are named after their original file names.
+
+```html
+<!-- `display: block` sprite -->
+<div class="icon-home"></div>
+
+<!-- `display: inline-block` sprite -->
+<img class="icon-home" />
+```
+*/
+.ico-com-checkbox-checked {
+  background-image: url(../image/ico-com.png);
+  background-position: 0px 0px;
+  width: 18px;
+  height: 18px;
+}
+.ico-com-checkbox {
+  background-image: url(../image/ico-com.png);
+  background-position: -23px 0px;
+  width: 18px;
+  height: 18px;
+}
+.ico-com-radio-checked {
+  background-image: url(../image/ico-com.png);
+  background-position: 0px -23px;
+  width: 12px;
+  height: 12px;
+}
+.ico-com-radio {
+  background-image: url(../image/ico-com.png);
+  background-position: -17px -23px;
+  width: 12px;
+  height: 12px;
+}

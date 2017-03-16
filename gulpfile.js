@@ -234,7 +234,7 @@ gulp.task('copyicon',function(){
  */
 
  gulp.task('sprite', function () {
-    var spritePath = dev_path.src + 'image/sprite';
+    var spritePath = dev_path.src + 'image/ico';
     var pa = fs.readdirSync(spritePath);
     var dirs = [];
     pa.forEach(function(ele,index){
@@ -244,21 +244,19 @@ gulp.task('copyicon',function(){
         }
     });
 
-
-
     var spriteData = [];
     for(var i=0;i<dirs.length;i++){
         (function(i){
             var dirName = dirs[i];
             var _spriteData = gulp.src(spritePath +"/"+ dirName + '/*.png').pipe(spritesmith({
-              imgName: 'sprite-'+ dirName +'.png',
-              cssName: 'sprite-'+ dirName +'.css',
-              imgPath: '../image/sprite-'+ dirName +'.png',
+              imgName: 'ico-'+ dirName +'.png',
+              cssName: '_' + dirName +'.css',
+              imgPath: '../image/ico-'+ dirName +'.png',
               padding:5,
               cssOpts: {
                  cssSelector: function (sprite) {
 
-                     return '.sprite-' + dirName + '-' + sprite.name;
+                     return '.ico-' + dirName + '-' + sprite.name;
                  }
               }
             }));
@@ -271,20 +269,16 @@ gulp.task('copyicon',function(){
     var cssStream = [];
     for(var i=0;i<spriteData.length;i++){
         var _imgStream = spriteData[i].img.pipe(gulp.dest(dev_path.dist + 'static/image'));
-        var _cssStream = spriteData[i].css;
+        var _cssStream = spriteData[i].css.pipe(rename(function (path) {
+                path.extname = '.scss';
+                return path;
+            }))
+            .pipe(gulp.dest(dev_path.src + 'sass/import/icon'));
         imgStream.push(_imgStream);
         cssStream.push(_cssStream);
     }
 
-    var mainCssStream = merge.apply(this,cssStream)
-    .pipe(concat('_sprite.css'))
-    .pipe(rename(function (path) {
-          path.extname = '.scss';
-          return path;
-     }))
-    .pipe(gulp.dest(dev_path.src + 'sass/import/icon'));
-
-    imgStream.push(mainCssStream);
+    imgStream.push(cssStream);
 
     return merge.apply(this,imgStream);
  });
