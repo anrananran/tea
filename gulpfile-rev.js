@@ -45,13 +45,8 @@ const config_path = dev_path.src + 'js/config.js';
 const manifest_root = dev_path.src + 'manifest/';
 
 gulp.task('default',[
-    'jade',
     'html',
     'js-copy',
-    'js-rev',
-    'js-vendor',
-    'js-polyfill',
-    'css-vendor',
     'copyicon',
     'imagemin',
     'sprite-rev',
@@ -60,7 +55,7 @@ gulp.task('default',[
 ]);
 
 //jade编译
-gulp.task('jade',['sass'],function(){
+gulp.task('jade',['sass','css-vendor','js-rev','js-vendor','js-polyfill'],function(){
 
     var manifest_css_sass = gulp.src(manifest_root + 'css/rev-manifest-sass.json');
     var manifest_css_vendor = gulp.src(manifest_root + 'css/rev-manifest-vendor.json');
@@ -69,9 +64,6 @@ gulp.task('jade',['sass'],function(){
     var manifest_js = gulp.src(manifest_root + 'js/rev-manifest-js.json');
 
     return gulp.src(dev_path.src + 'jade/*.jade')
-        .pipe(changedInPlace({
-            firstPass :true
-        }))
         .pipe(jade())
         .pipe(prettify({
             indentSize: 4,//缩进次数，默认缩进字符为空格
@@ -102,32 +94,8 @@ gulp.task('jade',['sass'],function(){
 });
 
 
-//由于gulp-changed-in-place的功能有限，所以为inc文件新建了一个监听任务
-gulp.task('jade-inc',function(){
-
-	var manifest_css_sass = gulp.src(manifest_root + 'css/rev-manifest-sass.json');
-
-    return gulp.src(dev_path.src + 'jade/*.jade')
-        .pipe(jade())
-        .pipe(prettify({
-            indentSize: 4,//缩进次数，默认缩进字符为空格
-            preserveNewlines : true,//保留换行符
-            maxPreserveNewlines: 0, //最多允许换行的次数
-            unformatted: [] //默认行内元素不换行，这里传一个空数组是为了覆盖默认值
-        }))
-        .pipe(rename(function (path) {
-            console.log('编译:'+path);
-            path.basename = "jade-" + path.basename;
-            return path;
-        }))
-		.pipe(revReplace({
-            manifest: manifest_css_sass
-        }))
-        .pipe(gulp.dest(dev_path.dist));
-});
-
 //复制非jade的html文件
-gulp.task('html',function(){
+gulp.task('html',['jade'],function(){
     return gulp.src(dev_path.src + 'html/**/*')
       .pipe(changedInPlace({
           firstPass :true
@@ -392,17 +360,7 @@ gulp.task('watch', function () {
     },function(vinyl){
 
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('jade');
-    });
-
-    //监控jade-inc文件
-    watch(dev_path.src + 'jade/inc/**/*.jade',{
-        usePolling: true,
-        readDelay:10
-    },function(vinyl){
-
-        console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('jade-inc');
+        gulp.start('html');
     });
 
 
@@ -412,7 +370,7 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('jade');
+        gulp.start('html');
     });
 
     //监控js文件
@@ -421,8 +379,8 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
+        gulp.start('html');
         gulp.start('js-copy');
-        gulp.start('js-rev');
     });
     
     watch(dev_path.src + 'js/config.js',{
@@ -430,9 +388,7 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('js-vendor');
-        gulp.start('css-vendor');
-        gulp.start('js-polyfill');
+        gulp.start('html');
     });
 
     //监控图片文件
@@ -443,7 +399,7 @@ gulp.task('watch', function () {
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
         gulp.start('imagemin');
         gulp.start('sprite-rev');
-        gulp.start('jade');
+        gulp.start('html');
     });
 
     //监控图标字体文件
