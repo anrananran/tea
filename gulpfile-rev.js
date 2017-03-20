@@ -66,11 +66,13 @@ gulp.task('jade',['sass','css-vendor','js-rev','js-vendor','js-polyfill'],functi
     return gulp.src(dev_path.src + 'jade/*.jade')
         .pipe(jade())
         .pipe(prettify({
+            // debug: true,
             indentSize: 4,//缩进次数，默认缩进字符为空格
             preserveNewlines : true,//保留换行符
             maxPreserveNewlines: 0, //最多允许换行的次数
             unformatted: [] //默认行内元素不换行，这里传一个空数组是为了覆盖默认值
         }))
+        .pipe(prettify.reporter())
         .pipe(rename(function (path) {
             path.basename = "jade-" + path.basename;
             return path;

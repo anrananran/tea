@@ -31,7 +31,7 @@ mixin script()
 mixin header(type)
     //整站头部
     header#header
-        
+
         
     //整站头部 end 
 
@@ -40,8 +40,7 @@ mixin header(type)
 mixin footer(type)
     //整站底部
     footer#footer
-        
-        
+            
     //整站底部 end
 
 mixin page-bar()
@@ -49,26 +48,32 @@ mixin page-bar()
     nav.page-bar
         ul.pages 
             li
-                a(href="#") &laquo;
+                a.is-prev(href="#") Prev
             li
                 a(href="#") 1
             li
                 a(href="#") 2
             li
-                span.active 3
+                span.is-active 3
             li
                 a(href="#") 4
             li
-                span ...
+                span.is-omit ...
             li
-                a(href="#") 12
+                a(href="#") 999
             li
-                a(href="#") &raquo;
-        span.jump
-            | Go to page 
-            input.input.ele-input(type="text",value="1")
-            input.ok.ele-btn.is-primary(type="button",value="Go")
+                a.is-next(href="#") Next
+        //- span.jump
+        //-     | Go to page 
+        //-     input.input.ele-input(type="text",value="1")
+        //-     input.ok.ele-btn.is-primary(type="button",value="Go")
                 
 
         
     //分页 end
+
+mixin dir-path()
+    div.dir-path
+        a(href="#") Home
+        span PC
+

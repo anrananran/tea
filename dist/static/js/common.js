@@ -70,14 +70,38 @@ $(function(){
         $body.html(update);
     }
 
+    //下拉框
+    $('.com-select').each(function(){
+        var that = $(this);
+        var hasFilter = that.data('filter');
+        var placeholder = that.attr('placeholder');
+        var theme = that.attr('data-select-theme') || 'is-theme-default';
+        
+        var minisearch = (hasFilter == 'false') ? 10 : Infinity;
+        
+        that.select2({
+            minimumResultsForSearch: minisearch,
+            placeholder : placeholder,
+            containerCssClass : theme,
+            dropdownCssClass : theme
+        });
+    });
     
     //ajax加载效果
     $.isLoading({text:'Loading...'});
     
     setTimeout(function(){
         $.isLoading('hide');
-    },3000);
+    },500);
     
+
+    //debug
+    // $(document).on('keyup',function(event){
+    //     var keycode = event.keyCode;
+    //     if(keycode == 113){
+    //         $('#page').toggleClass('is-debug');
+    //     }
+    // });
     
     
 });

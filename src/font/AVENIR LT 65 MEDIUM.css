@@ -1,0 +1,12 @@
+@font-face {
+    font-family: "Avenir LT 65 Medium";
+    src: url("../font/AVENIR LT 65 MEDIUM.eot"); /* IE9 */
+    src: url("../font/AVENIR LT 65 MEDIUM.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("../font/AVENIR LT 65 MEDIUM.woff") format("woff"), /* chrome, firefox */
+    url("../font/AVENIR LT 65 MEDIUM.ttf") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url("../font/AVENIR LT 65 MEDIUM.svg#Avenir LT 65 Medium") format("svg"); /* iOS 4.1- */
+    font-style: normal;
+    font-weight: normal;
+}
+
+

@@ -14,8 +14,9 @@
     margin: 0 auto;
     padding: 10px 20px;
     border-radius: 4px;
-    background: #464545;
-    background-clip: padding-box
+    background: #fff;
+    background-clip: padding-box;
+    color:#333;
 }
 
 .isloading-overlay .isloading-wrapper i {

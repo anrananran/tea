@@ -1,0 +1,27 @@
+doctype html
+html.no-js
+
+    include ./inc/mixin.jade
+    
+    head
+        +meta('desktop') 
+        +link('main')
+        script(src="static/js/jquery.js")
+        <!--[if lte IE 9]><script src="static/js/polyfill.js"></script><![endif]-->
+        
+        
+    body
+        
+        div#page
+            
+            +header()
+            
+        
+            div#inner
+                div.wrapper
+                    
+
+            +footer()
+            
+        +script()
+        

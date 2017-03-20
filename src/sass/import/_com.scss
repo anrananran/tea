@@ -1,0 +1,277 @@
+@charset "utf-8";
+
+//按钮
+@include root(com-btn) {
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    touch-action: manipulation;
+    vertical-align: middle;
+    overflow: hidden;
+    white-space: nowrap;
+    user-select: none;
+    background: #DF0338;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 20px;
+    color: #fff;
+    border-radius: 0;
+    // box-shadow: 1px 2px 5px 1px rgba(#000,.3);
+    transition: all .5s ease;
+    border: 0;
+
+    &:hover,
+    &:focus,
+    &.focus,{
+        text-decoration: none;
+        background: darken(#DF0338,3%);
+    }
+    
+    &:active,
+    &.active{
+        
+    }
+
+    &[disabled],
+    &.disabled{
+        cursor: not-allowed;
+        pointer-events: none;
+        filter:grayscale(1);
+        opacity:.65;
+    }
+
+    &.is-carmine{
+        background-color:#A10417;
+        border: 1px solid #C30020;
+        
+        &:hover{
+            background-color:darken(#A10417,5%);
+        }
+    }
+
+    &.is-mine-shaft{
+        background-color:#333333;
+        border: 0;
+        
+        &:hover{
+            background-color:darken(#333333,5%);
+        }
+    }
+    
+    &.is-h35{
+        height: 35px;
+        line-height: 35px;
+    }
+
+    
+    &.is-h30{
+        height: 30px;
+        line-height: 30px;
+    }
+
+
+}
+
+
+
+//输入框
+@include root(com-input) {
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 0;
+    padding:0 10px;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    background: transparent;
+    border: 1px solid #313131;
+    
+
+    &:hover,
+    &:focus,
+    &.focus{
+        box-shadow: 0 0 10px 1px rgba(#fff,.1);
+    }
+
+    &.placeholder{
+        color:#b2b2b2;
+    }
+
+    &[readonly],
+    &[disabled]{
+        pointer-events: none;
+        filter: grayscale(1);
+        opacity: .65;
+    }
+
+    &.is-h35{
+        height: 35px;
+        line-height: 35px;
+    }
+
+    
+    &.is-h30{
+        height: 30px;
+        line-height: 30px;
+    }
+
+}
+
+
+
+//下拉框
+@include root(com-select){
+    display: inline-block;
+    vertical-align: middle;
+    background:#fff;
+    border:0;
+    border-radius: 0;
+    padding:0 10px;
+    height: 40px;
+    line-height: 40px;
+    color: #1a1a1a;
+    
+    &:hover,
+    &:focus,
+    &.focus{
+        box-shadow: 0 0 10px 1px rgba(#fff,.1);
+    }
+    
+    &[readonly],
+    &[disabled]{
+        pointer-events: none;
+        filter: grayscale(1);
+        opacity: .65;
+    }
+    
+    
+}
+
+
+//缩略图
+@include root(com-nail) {
+    
+    text-align: center;
+    display: block;
+
+    &:before{
+        content:"";
+        height:100%;
+        vertical-align: middle;
+        display: inline-block;
+        margin-left: -5px;
+    }
+
+    img{
+        vertical-align: middle;
+        max-height: 100%;
+    }
+}
+
+
+//复选框
+@include root(com-checkbox) {
+
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: middle;
+
+    @include root(no-canvas) {
+
+        @include has(com-checkbox) {
+            .native{
+                display: inline-block;
+                vertical-align: middle;
+                margin-top: -2px;
+            }
+
+            .emulate{
+                display: none;
+            }
+        }
+
+
+    }
+
+    .native{
+        display: none;
+    }
+
+    .native:checked + .emulate{
+        @extend .ico-com-checkbox-checked;
+    }
+
+    .emulate{
+        display: inline-block;
+        vertical-align: middle;
+        @extend .ico-com-checkbox;
+        margin:-2px 8px 0 0;
+    }
+}
+
+
+//单选框
+@include root(com-radio) {
+
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: middle;
+
+    @include root(no-canvas) {
+
+        @include has(com-radio) {
+            .native{
+                display: inline-block;
+                vertical-align: middle;
+                margin-top: -2px;
+            }
+
+            .emulate{
+                display: none;
+            }
+        }
+
+    }
+
+    .native{
+        display: none;
+    }
+
+    .native:checked + .emulate{
+        @extend .ico-com-radio-checked;
+    }
+
+    .emulate{
+        display: inline-block;
+        vertical-align: middle;
+        @extend .ico-com-radio;
+        margin:-2px 8px 0 0;
+    }
+}
+
+@include root(com-counter) {
+    display: inline-block;
+    width: 140px;
+    text-align: center;
+
+    .ico{
+
+        &:hover{
+            opacity: .9;
+        }
+    }
+    
+    .num{
+        background: transparent;
+        border: 0;
+        height: 30px;
+        line-height: 30px;
+        width: 40px;
+        text-align: center;
+        padding: 0 5px;
+        margin: 0 -3px;
+        vertical-align: middle;
+        color: #fff;
+        font-size: 16px;
+    }
+}

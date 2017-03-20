@@ -1,0 +1,12 @@
+@font-face {
+    font-family: "Avenir LT 35 Light";
+    src: url("../font/AVENIR LT 35 LIGHT.eot"); /* IE9 */
+    src: url("../font/AVENIR LT 35 LIGHT.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("../font/AVENIR LT 35 LIGHT.woff") format("woff"), /* chrome, firefox */
+    url("../font/AVENIR LT 35 LIGHT.ttf") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url("../font/AVENIR LT 35 LIGHT.svg#Avenir LT 35 Light") format("svg"); /* iOS 4.1- */
+    font-style: normal;
+    font-weight: normal;
+}
+
+

@@ -77,9 +77,14 @@
 }
 
 //图片精灵
-.sprite{
+.ico{
     display: inline-block;
     vertical-align: middle;
+}
+
+//弹层
+.pop{
+    display: none;
 }
 
 
@@ -87,7 +92,7 @@
 @for $i from 12 through 24{
     @if $i % 2 == 0 {
         .fs-#{$i}{
-            font-size: #{$i}px;
+            font-size: #{$i}px!important;
         }
     }
 }
@@ -96,19 +101,19 @@
 @for $i from 5 through 30{
     @if $i % 5 == 0 {
         .ml-#{$i}{
-            margin-left: #{$i}px;
+            margin-left: #{$i}px!important;
         }
 
         .mt-#{$i}{
-            margin-top: #{$i}px;
+            margin-top: #{$i}px!important;
         }
 
         .mb-#{$i}{
-            margin-bottom: #{$i}px;
+            margin-bottom: #{$i}px!important;
         }
 
         .mr-#{$i}{
-            margin-right: #{$i}px;
+            margin-right: #{$i}px!important;
         }
 
     }

@@ -4,6 +4,8 @@ const MERGE_CONFIG = {
         'tooltipster/tooltipster.css',
         'layer/skin/default/layer.css',
         'isloading/isloading.css',
+        'bxslider/bxslider.css',
+        'select2/select2.css',
     ],
     
     JS_FILE : [
@@ -13,8 +15,9 @@ const MERGE_CONFIG = {
         'isloading/isloading.js',
         'modernizr/modernizr.js',
         'tabslet/tabslet.js',
-		'moment/moment.js',
-		'vue/2.1.10/vue.js',
+        'bxslider/bxslider.js',
+        'select2/select2.js',
+		'parsley/parsley.js',
    ],
    POLYFILL_FILE : [
         'polyfill/es5-shim.js',

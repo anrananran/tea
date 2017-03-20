@@ -1,13 +1,20 @@
 /*
 Icon classes can be used entirely standalone. They are named after their original file names.
 
-```html
-<!-- `display: block` sprite -->
+Example usage in HTML:
+
+`display: block` sprite:
 <div class="icon-home"></div>
 
-<!-- `display: inline-block` sprite -->
-<img class="icon-home" />
-```
+To change `display` (e.g. `display: inline-block;`), we suggest using a common CSS class:
+
+// CSS
+.icon {
+  display: inline-block;
+}
+
+// HTML
+<i class="icon icon-home"></i>
 */
 .ico-com-checkbox-checked {
   background-image: url(../image/ico-com.png);
@@ -24,12 +31,12 @@ Icon classes can be used entirely standalone. They are named after their origina
 .ico-com-radio-checked {
   background-image: url(../image/ico-com.png);
   background-position: 0px -23px;
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
 }
 .ico-com-radio {
   background-image: url(../image/ico-com.png);
-  background-position: -17px -23px;
-  width: 12px;
-  height: 12px;
+  background-position: -21px -23px;
+  width: 16px;
+  height: 16px;
 }

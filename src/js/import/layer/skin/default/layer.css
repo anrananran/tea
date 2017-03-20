@@ -3,7 +3,7 @@
 
 
 html .layui-layer {
-    background-color: #1b1b22
+    background-color: #1A1A1A
 }
 
 html .layui-layer.layui-layer-loading {
@@ -32,12 +32,23 @@ html .layui-layer .layui-layer-title {
     background-color: #1b1b22
 }
 
-html .layui-layer .layui-layer-close {
-    top: 3px!important;
-    right: 5px!important;
-    width: 20px!important;
-    height: 20px!important;
-    background: url(../image/layer-close.png) left top no-repeat!important
+html .layui-layer .layui-layer-setwin{
+    right: 0;
+    top: 0;
+}
+
+html .layui-layer .layui-layer-setwin a{
+    width: 30px;
+    height: 30px;
+    background: url(../image/layer/close.png) no-repeat 0 0;
+    right: 0;
+    top: 0;
+
+}
+
+html .layui-layer .layui-layer-setwin a:hover{
+    background-position: 0 0;
+    opacity: .9;
 }
 
 html .layui-layer .layui-layer-btn {
@@ -90,6 +101,10 @@ html .layui-layer .layui-layer-btn a.layui-layer-btn1 {
 
 html .layui-layer .layui-layer-btn a.layui-layer-btn1:hover {
     background-color: #7962a1
+}
+
+html .layui-layer .layui-layer-resize{
+    display: none;
 }
 
 @media screen and (max-width:1600px) {
