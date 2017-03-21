@@ -3,4 +3,7 @@
 @import "import/define/function";
 @import "import/define/mixin";
 
-
+@include root(test) {
+    @include omit;
+    height: 80px;
+}

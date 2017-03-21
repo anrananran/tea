@@ -25,10 +25,18 @@
     }
 }
 
-@mixin omit{
+@mixin omit($line:1){ //截断文字
+    
     overflow: hidden;
-    white-space: nowrap;
     text-overflow:ellipsis;
+
+    @if $line == 1{
+        white-space: nowrap;
+    }@else{
+        -webkit-line-clamp: $line;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+    }   
 }
 
 
