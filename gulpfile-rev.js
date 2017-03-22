@@ -33,6 +33,7 @@ const del = require('del');
 const revdel = require('gulp-rev-delete-original');
 const gulpIgnore = require('gulp-ignore');
 const md5 = require('blueimp-md5');
+const nunjucks = require('gulp-nunjucks');
 
 const root = './';//项目文件路径
 const dev_path = {
@@ -47,15 +48,13 @@ const manifest_root = dev_path.src + 'manifest/';
 gulp.task('default',[
     'html',
     'js-copy',
-    'copyicon',
     'imagemin',
-    'sprite-rev',
     'fontmin',
     'watch'
 ]);
 
 //jade编译
-gulp.task('jade',['sass','css-vendor','js-rev','js-vendor','js-polyfill'],function(){
+gulp.task('html',['sass','css-vendor','js-rev','js-vendor','js-polyfill'],function(){
 
     var manifest_css_sass = gulp.src(manifest_root + 'css/rev-manifest-sass.json');
     var manifest_css_vendor = gulp.src(manifest_root + 'css/rev-manifest-vendor.json');
@@ -63,20 +62,20 @@ gulp.task('jade',['sass','css-vendor','js-rev','js-vendor','js-polyfill'],functi
     var manifest_js_polyfill = gulp.src(manifest_root + 'js/rev-manifest-polyfill.json');
     var manifest_js = gulp.src(manifest_root + 'js/rev-manifest-js.json');
 
-    return gulp.src(dev_path.src + 'jade/*.jade')
-        .pipe(jade())
+    return gulp.src(dev_path.src + 'html/*.html')
+        .pipe(nunjucks.compile())
         .pipe(prettify({
             // debug: true,
             indentSize: 4,//缩进次数，默认缩进字符为空格
             preserveNewlines : true,//保留换行符
-            maxPreserveNewlines: 0, //最多允许换行的次数
+            maxPreserveNewlines: 1, //最多允许换行的次数
             unformatted: [] //默认行内元素不换行，这里传一个空数组是为了覆盖默认值
         }))
         .pipe(prettify.reporter())
-        .pipe(rename(function (path) {
-            path.basename = "jade-" + path.basename;
-            return path;
-        }))
+        // .pipe(rename(function (path) {
+        //     path.basename =  path.basename;
+        //     return path;
+        // }))
         .pipe(revReplace({
             manifest: manifest_css_sass
         }))
@@ -96,21 +95,8 @@ gulp.task('jade',['sass','css-vendor','js-rev','js-vendor','js-polyfill'],functi
 });
 
 
-//复制非jade的html文件
-gulp.task('html',['jade'],function(){
-    return gulp.src(dev_path.src + 'html/**/*')
-      .pipe(changedInPlace({
-          firstPass :true
-      }))
-      .pipe(rename(function (path) {
-          path.basename = "html-" + path.basename;
-          return path;
-      }))
-      .pipe(gulp.dest(dev_path.dist))
-});
-
 //sass编译
-gulp.task('sass',['clean-css'],function () {
+gulp.task('sass',['sprite-rev'],function () {
 
     var manifest = gulp.src(manifest_root + 'image/rev-manifest.json');
 
@@ -239,12 +225,6 @@ gulp.task('css-vendor',function(){
       .pipe(gulp.dest(manifest_root + 'css'));
 });
 
-//图标字体拷贝
-gulp.task('copyicon',function(){
-    return gulp.src(dev_path.src + 'icon/**/*')
-      .pipe(gulp.dest(dev_path.dist + 'static/icon'))
-});
-
 
 
 /**
@@ -273,7 +253,7 @@ gulp.task('copyicon',function(){
  * 图片精灵[注意：当图片只有一张时不会打包该图片]
  */
 
- gulp.task('sprite', function () {
+ gulp.task('sprite', ['clean-css'],function () {
 
      var spritePath = dev_path.src + 'image/ico';
      var pa = fs.readdirSync(spritePath);
@@ -341,9 +321,6 @@ gulp.task('copyicon',function(){
  */
 gulp.task('fontmin',function(){
     return gulp.src(dev_path.src + 'font/*')
-        // .pipe(fontmin({
-        //     fontPath:'../font/'
-        // }))
         .pipe(gulp.dest(dev_path.dist + 'static/font'));
 });
 
@@ -356,7 +333,7 @@ gulp.task('fontmin',function(){
 gulp.task('watch', function () {
 
     //监控jade文件
-    watch(dev_path.src + 'jade/*.jade',{
+    watch(dev_path.src + 'html/**/*.html',{
         usePolling: true,
         readDelay:10
     },function(vinyl){
@@ -400,20 +377,18 @@ gulp.task('watch', function () {
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
         gulp.start('imagemin');
-        gulp.start('sprite-rev');
-        gulp.start('html');
     });
 
-    //监控图标字体文件
-    watch(dev_path.src + 'icon/**/*',{
+    //监控ico文件
+    watch(dev_path.src + 'image/ico/**/*',{
         usePolling: true,
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('copyicon');
+        gulp.start('html');
     });
 
-
+  
     //监控外部字体文件
     watch(dev_path.src + 'font/**/*',{
         usePolling: true,

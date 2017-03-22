@@ -19,15 +19,18 @@
 
 
 
-.wrapper{
+@include root(wrapper) {
     width:1200px;
     margin:0 auto;
     position: relative;
 }
 
+@include root(page) {
 
-
-#page{
+    display: flex; 
+    flex-flow: column; 
+    -ms-flex-flow: column; 
+    min-height: 100vh;
 
     &.is-debug{
         position: relative;
@@ -45,22 +48,24 @@
     }
 }
 
-#header{
-
-    background: #1A1A1A;
+@include root(page-header) {
+    height: 200px;
+    background: #00fff0;
     border-bottom: 1px solid #313131;
     position: relative;
     
 }
 
-#inner{
+@include root(page-inner) {
     
     padding: 0 0 80px;
     overflow: hidden;
+    flex: 1;
 }
 
-#footer{
-    padding: 20px 0;
-    background: #1A1A1A;
+@include root(page-footer) {
+    padding: 50px 0;
+    background: #ff4200;
+
 }
 

@@ -3,7 +3,41 @@
 @import "import/define/function";
 @import "import/define/mixin";
 
-@include root(test) {
-    @include omit;
-    height: 80px;
+
+.img{background:url(../image/img.png) no-repeat ;display: block;background-size: rem(128) rem(768);}
+.pingguo{height:rem(128);width:rem(128);background-position:0 0;}
+.putao{height:rem(128);width:rem(128);background-position:0 rem(-128);}
+.xiangjiao{height:rem(128);width:rem(128);background-position:0 rem(-256);}
+.lizi{height:rem(128);width:rem(128);background-position:0 rem(-384);}
+.luobo{height:rem(128);width:rem(128);background-position:0 rem(-512);}
+.mangguo{height:rem(128);width:rem(128);background-position:0 rem(-640);}
+
+.test{
+    height: rem(100);
+    background: red;
+    font-size: 14px;
+}
+
+@media screen and (min-width: 320px){
+    html{
+        font-size: 20px;
+    }
+}
+
+@media screen and (min-width: 360px){
+    html{
+        font-size: 24px;
+    }
+}
+
+@media screen and (min-width: 480px){
+    html{
+        font-size: 28px;
+    }
+}
+
+@media screen and (min-width: 768px){
+    html{
+        font-size: 32px;
+    }
 }

@@ -17,7 +17,8 @@ $(function(){
             return strs.replace(/[\s\.]/gi,'-').toLowerCase();
         }
         
-        $html.addClass(fill(browser.name) + '-' + fill(browser.major))
+        $html.addClass(fill(browser.name))
+             .addClass(fill(browser.name) + '-' + fill(browser.major))
              .addClass(fill(engine.name) + '-' + fill(engine.version))
              .addClass(fill(os.name) + '-' + fill(os.version));
              
@@ -29,9 +30,9 @@ $(function(){
 
     //sticky footer
     (function(){
-        var $header = $('#header');
-        var $inner = $('#inner');
-        var $footer = $('#footer');
+        var $header = $('#js-page-header');
+        var $inner = $('#js-page-inner');
+        var $footer = $('#js-page-footer');
 
         function stickyFooter(){
             var height = $window.height() - $header.outerHeight() - $footer.outerHeight();
@@ -40,11 +41,15 @@ $(function(){
             });
         }
 
-        stickyFooter();
-
-        $window.on('resize',function(){
+        if($html.hasClass('ie')){
+            
             stickyFooter();
-        });
+
+            $window.on('resize',function(){
+                stickyFooter();
+            });
+        }
+        
     })();
 
 

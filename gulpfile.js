@@ -25,6 +25,7 @@ const cssmin = require('gulp-cssmin');
 const fontmin = require('gulp-fontmin');
 const csslint = require('gulp-csslint');
 const jade = require('gulp-jade');
+const nunjucks = require('gulp-nunjucks');
 const changedInPlace = require('gulp-changed-in-place');
 const gulpIgnore = require('gulp-ignore');
 
@@ -38,7 +39,6 @@ const dev_path = {
 const config_path = dev_path.src + 'js/config.js';
 
 gulp.task('default',[
-    'jade',
     'html',
     'js-copy',
     'js-vendor',
@@ -52,62 +52,45 @@ gulp.task('default',[
     'watch'
 ]);
 
-//jade编译
-gulp.task('jade',function(){
-
-    return gulp.src(dev_path.src + 'jade/*.jade')
-        .pipe(changedInPlace({
-            firstPass :true
-        }))
-        .pipe(jade())
-        .pipe(prettify({
-            // debug: true,
-            indentSize: 4,//缩进次数，默认缩进字符为空格
-            preserveNewlines : true,//保留换行符
-            maxPreserveNewlines: 0, //最多允许换行的次数
-            unformatted: [] //默认行内元素不换行，这里传一个空数组是为了覆盖默认值
-        }))
-        .pipe(prettify.reporter())
-        .pipe(rename(function (path) {
-            path.basename = "jade-" + path.basename;
-            return path;
-        }))
-        .pipe(gulp.dest(dev_path.dist));
-});
-
-
-//由于gulp-changed-in-place的功能有限，所以为inc文件新建了一个监听任务
-gulp.task('jade-inc',function(){
-
-    return gulp.src(dev_path.src + 'jade/*.jade')
-        .pipe(jade())
-        .pipe(prettify({
-            indentSize: 4,//缩进次数，默认缩进字符为空格
-            preserveNewlines : true,//保留换行符
-            maxPreserveNewlines: 0, //最多允许换行的次数
-            unformatted: [] //默认行内元素不换行，这里传一个空数组是为了覆盖默认值
-        }))
-        .pipe(rename(function (path) {
-            path.basename = "jade-" + path.basename;
-            return path;
-        }))
-        .pipe(gulp.dest(dev_path.dist));
-});
-
-
-//复制非jade的html文件
+//html编译
 gulp.task('html',function(){
-    return gulp.src(dev_path.src + 'html/**/*')
+    return gulp.src([dev_path.src + 'html/*.html'])
       .pipe(changedInPlace({
           firstPass :true
       }))
-      .pipe(rename(function (path) {
-          path.basename = "html-" + path.basename;
-          return path;
+      .pipe(nunjucks.compile())
+      .pipe(prettify({
+          // debug: true,
+          indentSize: 4,//缩进次数，默认缩进字符为空格
+          preserveNewlines : true,//保留换行符
+          maxPreserveNewlines: 1, //最多允许换行的次数
+          unformatted: [] //默认行内元素不换行，这里传一个空数组是为了覆盖默认值
       }))
-      .pipe(gulp.dest(dev_path.dist))
+      .pipe(prettify.reporter())
+      // .pipe(rename(function (path) {
+      //     path.basename = path.basename;
+      //     return path;
+      // }))
+      .pipe(gulp.dest(dev_path.dist));
 });
 
+gulp.task('html-inc',function(){
+    return gulp.src([dev_path.src + 'html/*.html'])
+      .pipe(nunjucks.compile())
+      .pipe(prettify({
+          // debug: true,
+          indentSize: 4,//缩进次数，默认缩进字符为空格
+          preserveNewlines : true,//保留换行符
+          maxPreserveNewlines: 1, //最多允许换行的次数
+          unformatted: [] //默认行内元素不换行，这里传一个空数组是为了覆盖默认值
+      }))
+      .pipe(prettify.reporter())
+      // .pipe(rename(function (path) {
+      //     path.basename = path.basename;
+      //     return path;
+      // }))
+      .pipe(gulp.dest(dev_path.dist));
+});
 
 //sass编译
 gulp.task('sass',function () {
@@ -132,7 +115,7 @@ gulp.task('sass',function () {
 });
 
 
-//第三方库合并
+//第三方js库打包
 gulp.task('js-copy',function(){
     
     return gulp.src(dev_path.src + 'js/**/*')
@@ -214,7 +197,7 @@ gulp.task('copyicon',function(){
  * 图片优化压缩
  */
  gulp.task('imagemin', function(){
-    return gulp.src([dev_path.src + 'image/**/*','!'+dev_path.src + 'image/sprite/**/*'])
+    return gulp.src([dev_path.src + 'image/**/*','!'+dev_path.src + 'image/ico/**/*'])
         .pipe(changedInPlace({
             firstPass:true
         }))
@@ -290,9 +273,6 @@ gulp.task('copyicon',function(){
  */
 gulp.task('fontmin',function(){
     return gulp.src(dev_path.src + 'font/*')
-        // .pipe(fontmin({
-        //     fontPath:'../font/'
-        // }))
         .pipe(gulp.dest(dev_path.dist + 'static/font'));
 });
 
@@ -304,26 +284,22 @@ gulp.task('fontmin',function(){
 
 gulp.task('watch', function () {
 
-    //监控jade文件
-    watch(dev_path.src + 'jade/*.jade',{
+    //监控html文件
+    watch(dev_path.src + 'html/*.html',{
         usePolling: true,
-        readDelay:10
+        readDelay:1000
     },function(vinyl){
-
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('jade');
+        gulp.start('html');
     });
 
-    //监控jade-inc文件
-    watch(dev_path.src + 'jade/inc/**/*.jade',{
+    watch([dev_path.src + 'html/**/*.html','!' + dev_path.src + 'html/*.html'],{
         usePolling: true,
-        readDelay:10
+        readDelay:1000
     },function(vinyl){
-
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('jade-inc');
+        gulp.start('html-inc');
     });
-
 
     //监控sass文件
     watch(dev_path.src + 'sass/**/*.scss',{
@@ -343,6 +319,7 @@ gulp.task('watch', function () {
         gulp.start('js-copy');
     });
     
+    //监控js打包配置文件
     watch(dev_path.src + 'js/config.js',{
         usePolling: true,
         readDelay:1000
