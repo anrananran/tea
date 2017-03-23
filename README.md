@@ -6,6 +6,7 @@
 + image: 图片压缩、小图按需合并
 + html: html编译、循环、引用，使用nunjucks模板引擎
 + js: js按需打包
+++ import: 第三方框架、库、插件目录
 + font: 字体文件
 + manifest: 文件指纹配置文件，gulp运行时实时更新
 
