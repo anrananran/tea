@@ -24,6 +24,7 @@
     "gulp-imagemin": "^3.1.1",
     "gulp-jade": "^1.1.0",
     "gulp-jsbeautifier": "^2.0.3",
+    "gulp-minifier": "^0.2.1",
     "gulp-nunjucks": "^3.0.0",
     "gulp-posthtml": "^2.0.0",
     "gulp-rename": "^1.2.2",

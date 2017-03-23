@@ -28,6 +28,7 @@ const jade = require('gulp-jade');
 const nunjucks = require('gulp-nunjucks');
 const changedInPlace = require('gulp-changed-in-place');
 const gulpIgnore = require('gulp-ignore');
+const minify = require('gulp-minifier');
 
 
 const root = './';//项目文件路径
@@ -61,15 +62,27 @@ gulp.task('html',function(){
       .pipe(nunjucks.compile())
       .pipe(prettify({
           // debug: true,
+
           indentSize: 4,//缩进次数，默认缩进字符为空格
           preserveNewlines : true,//保留换行符
-          maxPreserveNewlines: 1, //最多允许换行的次数
+          maxPreserveNewlines: 0, //最多允许换行的次数
           unformatted: [] //默认行内元素不换行，这里传一个空数组是为了覆盖默认值
       }))
       .pipe(prettify.reporter())
       // .pipe(rename(function (path) {
       //     path.basename = path.basename;
       //     return path;
+      // }))
+      // .pipe(minify({  //html压缩
+      //     minify: true,
+      //     collapseWhitespace: true,
+      //     conservativeCollapse: true,
+      //     minifyJS: true,
+      //     minifyCSS: true,
+      //     getKeptComment: function (content, filePath) {
+      //         var m = content.match(/\/\*![\s\S]*?\*\//img);
+      //         return m && m.join('\n') + '\n' || '';
+      //     }
       // }))
       .pipe(gulp.dest(dev_path.dist));
 });
