@@ -29,6 +29,9 @@ const nunjucks = require('gulp-nunjucks');
 const changedInPlace = require('gulp-changed-in-place');
 const gulpIgnore = require('gulp-ignore');
 const minify = require('gulp-minifier');
+const opn = require('opn');
+const imageSize = require('image-size');
+const buffer = require('vinyl-buffer');
 
 
 const root = './';//项目文件路径
@@ -253,7 +256,6 @@ gulp.task('copyicon',function(){
               padding:5,
               cssOpts: {
                  cssSelector: function (sprite) {
-
                      return '.ico-' + dirName + '-' + sprite.name;
                  }
               }
@@ -272,6 +274,7 @@ gulp.task('copyicon',function(){
                 return path;
             }))
             .pipe(gulp.dest(dev_path.src + 'sass/import/icon'));
+
         imgStream.push(_imgStream);
         cssStream.push(_cssStream);
     }
@@ -302,6 +305,10 @@ gulp.task('watch', function () {
         usePolling: true,
         readDelay:1000
     },function(vinyl){
+        if(vinyl.event == 'add'){
+          var pageurl = path.join('http://172.16.12.68:88/',path.relative('F:\\Qui',vinyl.path).replace('src\\html\\','dist\\'));
+          opn(pageurl);
+        }
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
         gulp.start('html');
     });
@@ -310,6 +317,7 @@ gulp.task('watch', function () {
         usePolling: true,
         readDelay:1000
     },function(vinyl){
+
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
         gulp.start('html-inc');
     });
