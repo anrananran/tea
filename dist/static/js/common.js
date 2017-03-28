@@ -41,14 +41,11 @@ $(function(){
             });
         }
 
-        if($html.hasClass('ie')){
-            
-            stickyFooter();
+        stickyFooter();
 
-            $window.on('resize',function(){
-                stickyFooter();
-            });
-        }
+        $window.on('resize',function(){
+            stickyFooter();
+        });
         
     })();
 

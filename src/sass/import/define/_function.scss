@@ -1,14 +1,29 @@
 @charset "utf-8";
 
 /**
- * [rem 移动端尺寸计算] 注意:以后字体不要用rem
+ * 响应式图标精灵
  */
+$useResponsiveIcon: false; //是否开启响应式图标精灵
 
-@function rem($number){
-    @return $number / (2*20) + rem;
+@function zoom($number){
+    @if $useResponsiveIcon {
+        @return $number / 20 + rem;
+    }@else{
+        @return $number + px;
+    }
 }
 
-//三角形
+/**
+ * 移动端 px to rem
+ */
+@function rem($number){
+    @return $number / 2 / 20 + rem;
+}
+
+
+/**
+ * css 三角形
+ */
 @mixin triangle ($size, $color, $direction) {
   height: 0;
   width: 0;

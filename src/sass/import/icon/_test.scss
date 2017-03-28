@@ -1,0 +1,46 @@
+
+/**
+ * sprite css的模板文件
+ */
+.ico-test {
+    background-image: url(../image/ico-test.png);
+    display: inline-block;
+    vertical-align: middle;
+    background-size: zoom(89) zoom(52);
+}
+
+.ico-test-android-hover {
+    background-position: zoom(0) zoom(-28);
+    width: zoom(19);
+    height: zoom(24);
+}
+.ico-test-apple-hover {
+    background-position: zoom(0) zoom(0);
+    width: zoom(20);
+    height: zoom(23);
+}
+.ico-test-date {
+    background-position: zoom(-25) zoom(0);
+    width: zoom(20);
+    height: zoom(20);
+}
+.ico-test-qian {
+    background-position: zoom(-25) zoom(-25);
+    width: zoom(19);
+    height: zoom(20);
+}
+.ico-test-save {
+    background-position: zoom(-50) zoom(0);
+    width: zoom(18);
+    height: zoom(18);
+}
+.ico-test-suo {
+    background-position: zoom(-50) zoom(-23);
+    width: zoom(18);
+    height: zoom(16);
+}
+.ico-test-wait {
+    background-position: zoom(-73) zoom(0);
+    width: zoom(16);
+    height: zoom(16);
+}

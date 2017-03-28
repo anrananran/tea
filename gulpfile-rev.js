@@ -1,12 +1,6 @@
 /**
- * 自动构建
- * 1.jade -> html
- * 2.sass scss编译 + 自动补前缀 + 属性排序 + 压缩 + 文件缓存 -> css
- * 4.imagemin 图片压缩
- * 5.sprite 雪碧图合并
+ * tea 带指纹的构建
  */
- 
- 
 const fs = require('fs');
 const path = require('path');
 const concat = require('gulp-concat');
@@ -25,36 +19,55 @@ const cssmin = require('gulp-cssmin');
 const fontmin = require('gulp-fontmin');
 const csslint = require('gulp-csslint');
 const jade = require('gulp-jade');
+const nunjucks = require('gulp-nunjucks');
 const changedInPlace = require('gulp-changed-in-place');
 const rev = require('gulp-rev');
 const revReplace = require("gulp-rev-replace");
 const revFormat = require('gulp-rev-format');
 const del = require('del');
 const revdel = require('gulp-rev-delete-original');
-const gulpIgnore = require('gulp-ignore');
-const md5 = require('blueimp-md5');
-const nunjucks = require('gulp-nunjucks');
+const sequence = require('gulp-sequence');
 
 const root = './';//项目文件路径
 const dev_path = {
     src : root + 'src/', //源码目录,
-    dist : root + 'dist/' //构建目标目录
+    dist : root + 'dist/' //构建目录
 };
 
 const config_path = dev_path.src + 'js/config.js';
 
 const manifest_root = dev_path.src + 'manifest/';
 
-gulp.task('default',[
-    'html',
-    'js-copy',
-    'imagemin',
-    'fontmin',
+//初始任务
+gulp.task('default',sequence(
+    'build',
     'watch'
-]);
+  )
+);
 
-//jade编译
-gulp.task('html',['sass','css-vendor','js-rev','js-vendor','js-polyfill'],function(){
+//清理dist目录
+gulp.task('clean-dist', function () {
+    return del([
+         dev_path.dist
+    ],{
+        force : true
+    });
+});
+
+//任务列表
+gulp.task('build',function(callback){
+    sequence(
+      'clean-dist', 
+      ['js-copy','js-rev','js-vendor','js-polyfill','css-vendor','image','font'],
+      'sprite',
+      'sprite-rev',
+      'sass',
+      'html'
+    )(callback);
+});
+    
+//html编译
+gulp.task('html',function(){
 
     var manifest_css_sass = gulp.src(manifest_root + 'css/rev-manifest-sass.json');
     var manifest_css_vendor = gulp.src(manifest_root + 'css/rev-manifest-vendor.json');
@@ -94,13 +107,15 @@ gulp.task('html',['sass','css-vendor','js-rev','js-vendor','js-polyfill'],functi
         .pipe(gulp.dest(dev_path.dist));
 });
 
-
 //sass编译
-gulp.task('sass',['sprite-rev'],function () {
+gulp.task('sass',function () {
 
     var manifest = gulp.src(manifest_root + 'image/rev-manifest.json');
 
     return gulp.src(dev_path.src + 'sass/*.scss')
+    .pipe(changedInPlace({
+        firstPass :true
+    }))
     .pipe(sass({
         //outputStyle: 'compressed'
     }).on('error', sass.logError))
@@ -125,16 +140,7 @@ gulp.task('sass',['sprite-rev'],function () {
     .pipe(gulp.dest(manifest_root + 'css'));
 });
 
-gulp.task('clean-css', function () {
-    return del([
-         dev_path.dist + 'static/css'
-    ],{
-        force : true
-    });
-});
-
-
-//第三方库合并
+//拷贝第三方插件、库、框架的目录
 gulp.task('js-copy',function(){
     
     return gulp.src([dev_path.src + 'js/**/*','!' + dev_path.src + 'js/*.js'])
@@ -144,6 +150,8 @@ gulp.task('js-copy',function(){
       .pipe(gulp.dest(dev_path.dist + 'static/js'))
 });
 
+
+//给业务js添加文件指纹
 gulp.task('js-rev',function(){
     
     return gulp.src(dev_path.src + 'js/*.js')
@@ -156,7 +164,7 @@ gulp.task('js-rev',function(){
       .pipe(gulp.dest(manifest_root + 'js'));
 });
 
-
+//第三方插件、库、框架的目录打包
 gulp.task('js-vendor',function(){
     
     delete require.cache[require.resolve(config_path)];
@@ -178,6 +186,8 @@ gulp.task('js-vendor',function(){
       .pipe(gulp.dest(manifest_root + 'js'));
 });
 
+
+//ES5兼容补丁打包
 gulp.task('js-polyfill',function(){
     
     delete require.cache[require.resolve(config_path)];
@@ -199,6 +209,8 @@ gulp.task('js-polyfill',function(){
       .pipe(gulp.dest(manifest_root + 'js'));
 });
 
+
+//第三方插件、库、框架依赖的样式文件打包
 gulp.task('css-vendor',function(){
     
     delete require.cache[require.resolve(config_path)];
@@ -227,10 +239,8 @@ gulp.task('css-vendor',function(){
 
 
 
-/**
- * 图片优化压缩
- */
- gulp.task('imagemin', function(){
+//图片优化压缩
+ gulp.task('image', function(){
     return gulp.src([dev_path.src + 'image/**/*','!'+dev_path.src + 'image/ico/**/*'])
         .pipe(changedInPlace({
             firstPass:true
@@ -249,11 +259,8 @@ gulp.task('css-vendor',function(){
 
 
 
-/**
- * 图片精灵[注意：当图片只有一张时不会打包该图片]
- */
-
- gulp.task('sprite', ['clean-css'],function () {
+//精灵图
+ gulp.task('sprite',function () {
 
      var spritePath = dev_path.src + 'image/ico';
      var pa = fs.readdirSync(spritePath);
@@ -274,11 +281,9 @@ gulp.task('css-vendor',function(){
                cssName: '_'+ dirName +'.css',
                imgPath: '../image/ico-'+ dirName +'.png',
                padding:5,
+               cssTemplate: 'css.handlebars',
                cssOpts: {
-                  cssSelector: function (sprite) {
-
-                      return '.ico-' + dirName + '-' + sprite.name;
-                  }
+                  dirName : dirName   //这里自定义的参数可以在handlebars中通过options.dirName调用
                }
              }));
 
@@ -305,69 +310,52 @@ gulp.task('css-vendor',function(){
      return merge.apply(this,imgStream);
  });
 
+//精灵图指纹
+gulp.task('sprite-rev',function () {
 
-  gulp.task('sprite-rev',['sprite'],function () {
+   return gulp.src(dev_path.src + 'image/ico/ico-*.png')
+   .pipe(rev())
+   .pipe(revdel())
+   .pipe(gulp.dest(dev_path.dist + 'static/image'))
+   .pipe(rev.manifest())
+   .pipe(gulp.dest(manifest_root + 'image'));
+});
 
-     return gulp.src(dev_path.src + 'image/ico/ico-*.png')
-     .pipe(rev())
-     .pipe(revdel())
-     .pipe(gulp.dest(dev_path.dist + 'static/image'))
-     .pipe(rev.manifest())
-     .pipe(gulp.dest(manifest_root + 'image'));
- });
-
-/**
- * 外部字体转换
- */
-gulp.task('fontmin',function(){
+//拷贝字体文件
+gulp.task('font',function(){
     return gulp.src(dev_path.src + 'font/*')
         .pipe(gulp.dest(dev_path.dist + 'static/font'));
 });
 
-
-
-/**
- * 监听文件变换
- */
-
+//监听文件变换
 gulp.task('watch', function () {
 
-    //监控jade文件
+    //监控html文件
     watch(dev_path.src + 'html/**/*.html',{
         usePolling: true,
         readDelay:10
     },function(vinyl){
-
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('html');
+        gulp.start('build');
     });
 
 
     //监控sass文件
-    watch(dev_path.src + 'sass/**/*.scss',{
+    watch([dev_path.src + 'sass/**/*.scss','!' + dev_path.src + 'sass/import/icon/*.scss'],{
         usePolling: true,
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('html');
+        gulp.start('build');
     });
 
     //监控js文件
-    watch([dev_path.src + 'js/**/*.js','!' + dev_path.src + 'js/config.js'],{
+    watch([dev_path.src + 'js/**/*'],{
         usePolling: true,
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('html');
-        gulp.start('js-copy');
-    });
-    
-    watch(dev_path.src + 'js/config.js',{
-        usePolling: true,
-        readDelay:1000
-    },function(vinyl){
-        console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('html');
+        gulp.start('build');
     });
 
     //监控图片文件
@@ -376,7 +364,7 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('imagemin');
+        gulp.start('image');
     });
 
     //监控ico文件
@@ -385,16 +373,16 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('html');
+        gulp.start('build');
     });
 
   
-    //监控外部字体文件
+    //监控字体文件
     watch(dev_path.src + 'font/**/*',{
         usePolling: true,
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('fontmin');
+        gulp.start('font');
     });
 });

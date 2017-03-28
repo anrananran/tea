@@ -8,7 +8,7 @@ html .layui-layer {
 
 html .layui-layer.layui-layer-loading {
     border: 0;
-    background: 0 0
+    background: 0 0;
 }
 
 html .layui-layer.layui-layer-loading .layui-layer-content {

@@ -7,17 +7,15 @@
 @import "import/define/mixin";                  //混合宏
 @import "import/define/helper";                 //助手类
 
-@import "import/icon/font";                     //字符图标
-@import "import/icon/com";                      //公共精灵图标
+@import "import/icon/font";                     //字体图标
+@import "import/icon/mini";                     //精灵图标
 
 @import "import/system/display";                //响应式显示
 @import "import/system/grid";                   //响应式栅格
 
-@import "import/anime";                         //动画
+@import "import/keyframes";                     //动画
 @import "import/color";                         //颜色
-@import "import/com";                           //元素
-
-
+@import "import/widget";                        //小部件
 
 @include root(wrapper) {
     width:1200px;
@@ -26,11 +24,6 @@
 }
 
 @include root(page) {
-
-    display: flex; 
-    flex-flow: column; 
-    -ms-flex-flow: column; 
-    min-height: 100vh;
 
     &.is-debug{
         position: relative;
@@ -58,9 +51,9 @@
 
 @include root(page-inner) {
     
-    padding: 0 0 80px;
+    padding: 20px 0 80px;
     overflow: hidden;
-    flex: 1;
+    
 }
 
 @include root(page-footer) {

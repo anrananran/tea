@@ -1,0 +1,36 @@
+
+/**
+ * sprite css的模板文件
+ */
+.ico-mini {
+    background-image: url(../image/ico-mini.png);
+    display: inline-block;
+    vertical-align: middle;
+    background-size: zoom(64) zoom(43);
+}
+
+.ico-mini-checkbox-checked {
+    background-position: zoom(-25) zoom(0);
+    width: zoom(18);
+    height: zoom(18);
+}
+.ico-mini-checkbox {
+    background-position: zoom(0) zoom(-25);
+    width: zoom(18);
+    height: zoom(18);
+}
+.ico-mini-date {
+    background-position: zoom(0) zoom(0);
+    width: zoom(20);
+    height: zoom(20);
+}
+.ico-mini-radio-checked {
+    background-position: zoom(-23) zoom(-25);
+    width: zoom(16);
+    height: zoom(16);
+}
+.ico-mini-radio {
+    background-position: zoom(-48) zoom(0);
+    width: zoom(16);
+    height: zoom(16);
+}

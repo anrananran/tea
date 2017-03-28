@@ -17,7 +17,6 @@ const MERGE_CONFIG = {
         'tabslet/tabslet.js',
         'bxslider/bxslider.js',
         'select2/select2.js',
-		'parsley/parsley.js',
    ],
    POLYFILL_FILE : [
         'polyfill/es5-shim.js',

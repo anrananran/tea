@@ -1,0 +1,18 @@
+
+/**
+ * sprite css的模板文件
+ */
+.ico-{{options.dirName}} {
+    background-image: url({{{spritesheet.image}}});
+    display: inline-block;
+    vertical-align: middle;
+    background-size: zoom({{spritesheet.width}}) zoom({{spritesheet.height}});
+}
+
+{{#sprites}}
+.ico-{{../options.dirName}}-{{name}} {
+    background-position: zoom({{offset_x}}) zoom({{offset_y}});
+    width: zoom({{width}});
+    height: zoom({{height}});
+}
+{{/sprites}}

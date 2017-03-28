@@ -198,13 +198,12 @@
     }
 
     .native:checked + .emulate{
-        @extend .ico-com-checkbox-checked;
+        @extend .ico-mini-checkbox-checked;
     }
 
     .emulate{
-        display: inline-block;
-        vertical-align: middle;
-        @extend .ico-com-checkbox;
+        @extend .ico-mini;
+        @extend .ico-mini-checkbox;
         margin:-2px 8px 0 0;
     }
 }
@@ -238,40 +237,13 @@
     }
 
     .native:checked + .emulate{
-        @extend .ico-com-radio-checked;
+        @extend .ico-mini-radio-checked;
     }
 
     .emulate{
-        display: inline-block;
-        vertical-align: middle;
-        @extend .ico-com-radio;
+        @extend .ico-mini;
+        @extend .ico-mini-radio;
         margin:-2px 8px 0 0;
     }
 }
 
-@include root(com-counter) {
-    display: inline-block;
-    width: 140px;
-    text-align: center;
-
-    .ico{
-
-        &:hover{
-            opacity: .9;
-        }
-    }
-    
-    .num{
-        background: transparent;
-        border: 0;
-        height: 30px;
-        line-height: 30px;
-        width: 40px;
-        text-align: center;
-        padding: 0 5px;
-        margin: 0 -3px;
-        vertical-align: middle;
-        color: #fff;
-        font-size: 16px;
-    }
-}

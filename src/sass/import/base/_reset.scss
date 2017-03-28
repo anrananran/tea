@@ -4,6 +4,10 @@
     box-sizing:border-box;
 }
 
+html{
+    font-size: 20px;//此值专供rem单位作为基点使用
+}
+
 body{
     background:#111111;
     color:#fff;

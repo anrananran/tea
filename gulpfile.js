@@ -1,12 +1,7 @@
 /**
- * 自动构建
- * 1.jade -> html
- * 2.sass scss编译 + 自动补前缀 + 属性排序 + 压缩 -> css
- * 4.imagemin 图片压缩
- * 5.sprite 雪碧图合并
+ * tea 普通构建
+ * 
  */
-
-
 const fs = require('fs');
 const path = require('path');
 const concat = require('gulp-concat');
@@ -30,29 +25,22 @@ const changedInPlace = require('gulp-changed-in-place');
 const gulpIgnore = require('gulp-ignore');
 const minify = require('gulp-minifier');
 const opn = require('opn');
-const imageSize = require('image-size');
-const buffer = require('vinyl-buffer');
-
 
 const root = './';//项目文件路径
 const dev_path = {
     src : root + 'src/', //源码目录,
-    dist : root + 'dist/' //构建目标目录
+    dist : root + 'dist/' //构建目录
 };
 
 const config_path = dev_path.src + 'js/config.js';
 
 gulp.task('default',[
     'html',
-    'js-copy',
-    'js-vendor',
-    'js-polyfill',
-    'css-vendor',
-    'copyicon',
-    'imagemin',
+    'font',
+    'image',
     'sprite',
+    'js',
     'sass',
-    'fontmin',
     'watch'
 ]);
 
@@ -65,7 +53,6 @@ gulp.task('html',function(){
       .pipe(nunjucks.compile())
       .pipe(prettify({
           // debug: true,
-
           indentSize: 4,//缩进次数，默认缩进字符为空格
           preserveNewlines : true,//保留换行符
           maxPreserveNewlines: 0, //最多允许换行的次数
@@ -90,6 +77,7 @@ gulp.task('html',function(){
       .pipe(gulp.dest(dev_path.dist));
 });
 
+//html中inc目录修改时触发这个任务
 gulp.task('html-inc',function(){
     return gulp.src([dev_path.src + 'html/*.html'])
       .pipe(nunjucks.compile())
@@ -130,8 +118,10 @@ gulp.task('sass',function () {
     .pipe(gulp.dest(dev_path.dist + 'static/css'));
 });
 
+//js编译打包
+gulp.task('js',['js-copy','js-vendor','js-polyfill','css-vendor']);
 
-//第三方js库打包
+//业务js文件编译，目前没有对其做任何操作
 gulp.task('js-copy',function(){
     
     return gulp.src(dev_path.src + 'js/**/*')
@@ -142,6 +132,7 @@ gulp.task('js-copy',function(){
 });
 
 
+//第三方插件、库、框架打包
 gulp.task('js-vendor',function(){
     
     delete require.cache[require.resolve(config_path)];
@@ -160,6 +151,7 @@ gulp.task('js-vendor',function(){
       .pipe(gulp.dest(dev_path.dist + 'static/js'))
 });
 
+//ES5兼容补丁打包
 gulp.task('js-polyfill',function(){
     
     delete require.cache[require.resolve(config_path)];
@@ -178,6 +170,7 @@ gulp.task('js-polyfill',function(){
       .pipe(gulp.dest(dev_path.dist + 'static/js'))
 });
 
+//第三方插件、库、框架依赖的样式文件打包
 gulp.task('css-vendor',function(){
     
     delete require.cache[require.resolve(config_path)];
@@ -201,18 +194,8 @@ gulp.task('css-vendor',function(){
       .pipe(gulp.dest(dev_path.dist + 'static/css'))
 });
 
-//图标字体拷贝
-gulp.task('copyicon',function(){
-    return gulp.src(dev_path.src + 'icon/**/*')
-      .pipe(gulp.dest(dev_path.dist + 'static/icon'))
-});
-
-
-
-/**
- * 图片优化压缩
- */
- gulp.task('imagemin', function(){
+//图片优化与压缩
+ gulp.task('image', function(){
     return gulp.src([dev_path.src + 'image/**/*','!'+dev_path.src + 'image/ico/**/*'])
         .pipe(changedInPlace({
             firstPass:true
@@ -229,11 +212,7 @@ gulp.task('copyicon',function(){
         .pipe(gulp.dest(dev_path.dist + 'static/image'));
  });
 
-
-/**
- * 图片精灵[注意：当图片只有一张时不会打包该图片]
- */
-
+//精灵图按目录打包
  gulp.task('sprite', function () {
     var spritePath = dev_path.src + 'image/ico';
     var pa = fs.readdirSync(spritePath);
@@ -254,10 +233,9 @@ gulp.task('copyicon',function(){
               cssName: '_' + dirName +'.css',
               imgPath: '../image/ico-'+ dirName +'.png',
               padding:5,
+              cssTemplate: 'css.handlebars',
               cssOpts: {
-                 cssSelector: function (sprite) {
-                     return '.ico-' + dirName + '-' + sprite.name;
-                 }
+                  dirName : dirName   //这里自定义的参数可以在handlebars中通过options.dirName调用
               }
             }));
 
@@ -284,20 +262,14 @@ gulp.task('copyicon',function(){
     return merge.apply(this,imgStream);
  });
 
-/**
- * 外部字体转换,fontmin有问题，手工转更靠谱
- */
-gulp.task('fontmin',function(){
+//拷贝字体文件
+gulp.task('font',function(){
     return gulp.src(dev_path.src + 'font/*')
         .pipe(gulp.dest(dev_path.dist + 'static/font'));
 });
 
 
-
-/**
- * 监听文件变换
- */
-
+//监听文件变换
 gulp.task('watch', function () {
 
     //监控html文件
@@ -313,11 +285,11 @@ gulp.task('watch', function () {
         gulp.start('html');
     });
 
+    //监控html文件中的inc目录
     watch([dev_path.src + 'html/**/*.html','!' + dev_path.src + 'html/*.html'],{
         usePolling: true,
         readDelay:1000
     },function(vinyl){
-
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
         gulp.start('html-inc');
     });
@@ -332,24 +304,12 @@ gulp.task('watch', function () {
     });
 
     //监控js文件
-    watch([dev_path.src + 'js/**/*.js','!' + dev_path.src + 'js/config.js'],{
+    watch([dev_path.src + 'js/**/*'],{
         usePolling: true,
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('js-copy');
-    });
-    
-    //监控js打包配置文件
-    watch(dev_path.src + 'js/config.js',{
-        usePolling: true,
-        readDelay:1000
-    },function(vinyl){
-        console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('js-copy');
-        gulp.start('js-vendor');
-        gulp.start('css-vendor');
-        gulp.start('js-polyfill');
+        gulp.start('js');
     });
 
     //监控图片文件
@@ -358,26 +318,16 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('imagemin');
+        gulp.start('image');
         gulp.start('sprite');
     });
 
-    //监控图标字体文件
-    watch(dev_path.src + 'icon/**/*',{
-        usePolling: true,
-        readDelay:1000
-    },function(vinyl){
-        console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('copyicon');
-    });
-
-
-    //监控外部字体文件
+    //监控字体文件
     watch(dev_path.src + 'font/**/*',{
         usePolling: true,
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('fontmin');
+        gulp.start('font');
     });
 });
