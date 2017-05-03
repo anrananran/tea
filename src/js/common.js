@@ -73,7 +73,7 @@ $(function(){
     }
 
     //下拉框
-    $('.com-select').each(function(){
+    $('.js-com-select').each(function(){
         var that = $(this);
         var hasFilter = that.data('filter');
         var placeholder = that.attr('placeholder');
@@ -98,12 +98,9 @@ $(function(){
     
 
     //debug
-    // $(document).on('keyup',function(event){
-    //     var keycode = event.keyCode;
-    //     if(keycode == 113){
-    //         $('#page').toggleClass('is-debug');
-    //     }
-    // });
+    key('f',function(){
+        $('#js-page').toggleClass('is-debug');
+    });
     
     
 });

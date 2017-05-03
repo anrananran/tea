@@ -14,13 +14,13 @@
 @import "import/color";                         //颜色
 @import "import/widget";                        //小部件
 
-@include root(wrapper) {
+.wrapper{
     width:1200px;
     margin:0 auto;
     position: relative;
 }
 
-@include root(page) {
+.page{
 
     &.is-debug{
         position: relative;
@@ -38,24 +38,14 @@
     }
 }
 
-@include root(page-header) {
-    height: 200px;
-    background: #00fff0;
-    border-bottom: 1px solid #313131;
-    position: relative;
+.page-header{
     
 }
 
-@include root(page-inner) {
-    
-    padding: 20px 0 80px;
+.page-inner{
     overflow: hidden;
+}
+
+.page-footer{
     
 }
-
-@include root(page-footer) {
-    padding: 50px 0;
-    background: #ff4200;
-
-}
-

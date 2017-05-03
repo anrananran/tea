@@ -18,7 +18,6 @@ const csscomb = require('gulp-csscomb');
 const cssmin = require('gulp-cssmin');
 const fontmin = require('gulp-fontmin');
 const csslint = require('gulp-csslint');
-const jade = require('gulp-jade');
 const nunjucks = require('gulp-nunjucks');
 const changedInPlace = require('gulp-changed-in-place');
 const rev = require('gulp-rev');

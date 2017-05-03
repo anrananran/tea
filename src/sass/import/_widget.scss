@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 //按钮
-@include root(com-btn) {
+.com-btn{
     display: inline-block;
     text-align: center;
     cursor: pointer;
@@ -57,25 +57,12 @@
             background-color:darken(#333333,5%);
         }
     }
-    
-    &.is-h35{
-        height: 35px;
-        line-height: 35px;
-    }
-
-    
-    &.is-h30{
-        height: 30px;
-        line-height: 30px;
-    }
-
-
 }
 
 
 
 //输入框
-@include root(com-input) {
+.com-input{
     display: inline-block;
     vertical-align: middle;
     border-radius: 0;
@@ -103,24 +90,12 @@
         filter: grayscale(1);
         opacity: .65;
     }
-
-    &.is-h35{
-        height: 35px;
-        line-height: 35px;
-    }
-
-    
-    &.is-h30{
-        height: 30px;
-        line-height: 30px;
-    }
-
 }
 
 
 
 //下拉框
-@include root(com-select){
+.com-select{
     display: inline-block;
     vertical-align: middle;
     background:#fff;
@@ -139,9 +114,7 @@
     
     &[readonly],
     &[disabled]{
-        pointer-events: none;
-        filter: grayscale(1);
-        opacity: .65;
+        
     }
     
     
@@ -149,7 +122,7 @@
 
 
 //缩略图
-@include root(com-nail) {
+.com-nail{
     
     text-align: center;
     display: block;
@@ -170,15 +143,15 @@
 
 
 //复选框
-@include root(com-checkbox) {
+.com-checkbox{
 
     display: inline-block;
     cursor: pointer;
     vertical-align: middle;
 
-    @include root(no-canvas) {
+    @at-root .no-canvas{
 
-        @include has(com-checkbox) {
+        .com-checkbox{
             .native{
                 display: inline-block;
                 vertical-align: middle;
@@ -210,15 +183,15 @@
 
 
 //单选框
-@include root(com-radio) {
+.com-radio{
 
     display: inline-block;
     cursor: pointer;
     vertical-align: middle;
 
-    @include root(no-canvas) {
+    @at-root .no-canvas{
 
-        @include has(com-radio) {
+        .com-radio{
             .native{
                 display: inline-block;
                 vertical-align: middle;

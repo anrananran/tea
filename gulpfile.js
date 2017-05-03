@@ -19,12 +19,12 @@ const csscomb = require('gulp-csscomb');
 const cssmin = require('gulp-cssmin');
 const fontmin = require('gulp-fontmin');
 const csslint = require('gulp-csslint');
-const jade = require('gulp-jade');
 const nunjucks = require('gulp-nunjucks');
 const changedInPlace = require('gulp-changed-in-place');
 const gulpIgnore = require('gulp-ignore');
 const minify = require('gulp-minifier');
 const opn = require('opn');
+const sourcemaps = require('gulp-sourcemaps');
 
 const root = './';//项目文件路径
 const dev_path = {
@@ -100,6 +100,7 @@ gulp.task('html-inc',function(){
 gulp.task('sass',function () {
 
     return gulp.src(dev_path.src + 'sass/*.scss')
+    .pipe(sourcemaps.init())
     .pipe(sass({
         //outputStyle: 'compressed'
     }).on('error', sass.logError))
@@ -107,14 +108,13 @@ gulp.task('sass',function () {
         browsers: ['last 5 versions','Firefox >= 20','iOS >= 7','ie 8-11'],
         remove: false
     }))
-    .pipe(csscomb()) //属性排序
-    //.pipe(csslint()) //代码检查
-    //.pipe(csslint.reporter())
-    .pipe(cssmin({
-        advanced :true, //开启智能压缩
-        keepSpecialComments:0,//移除所有注释
-        restructuring:false//关闭选择器重组(此选项在classname名字过长时开启反而会增加文件体积)
-    }))
+    // .pipe(csscomb()) //属性排序
+    // .pipe(cssmin({
+    //     advanced :true, //开启智能压缩
+    //     keepSpecialComments:0,//移除所有注释
+    //     restructuring:false//关闭选择器重组(此选项在classname名字过长时开启反而会增加文件体积)
+    // }))
+    .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(dev_path.dist + 'static/css'));
 });
 
@@ -278,7 +278,7 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         if(vinyl.event == 'add'){
-          var pageurl = path.join('http://172.16.12.68:88/',path.relative('F:\\Qui',vinyl.path).replace('src\\html\\','dist\\'));
+          var pageurl = path.join('http://192.168.1.101/',path.relative('E:\\',vinyl.path).replace('src\\html\\','dist\\'));
           opn(pageurl);
         }
         console.log('File ' + vinyl.path + ' was changed, running tasks...');

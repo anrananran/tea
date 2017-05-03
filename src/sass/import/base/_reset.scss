@@ -17,32 +17,8 @@ body{
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     -webkit-focus-ring-color:rgba(0,0,0,0);
     // -webkit-touch-callout: none;
-    font:14px/1.5 'Avenir-light',Arial,Helvetica,"Helvetica Neue",Tahoma,sans-serif;
+    font:14px/1.5 '\5FAE\8F6F\96C5\9ED1','\5B8B\4F53',Arial,Helvetica,"Helvetica Neue",Tahoma,sans-serif;
 }
-
-@font-face {
-    font-family: "Avenir-light";
-    src: url("../font/AVENIR LT 35 LIGHT.eot"); /* IE9 */
-    src: url("../font/AVENIR LT 35 LIGHT.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
-    url("../font/AVENIR LT 35 LIGHT.woff") format("woff"), /* chrome, firefox */
-    url("../font/AVENIR LT 35 LIGHT.ttf") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
-    url("../font/AVENIR LT 35 LIGHT.svg#Avenir LT 35 Light") format("svg"); /* iOS 4.1- */
-    font-style: normal;
-    font-weight: normal;
-}
-
-
-@font-face {
-    font-family: "Avenir-medium";
-    src: url("../font/AVENIR LT 65 MEDIUM.eot"); /* IE9 */
-    src: url("../font/AVENIR LT 65 MEDIUM.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
-    url("../font/AVENIR LT 65 MEDIUM.woff") format("woff"), /* chrome, firefox */
-    url("../font/AVENIR LT 65 MEDIUM.ttf") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
-    url("../font/AVENIR LT 65 MEDIUM.svg#Avenir LT 65 Medium") format("svg"); /* iOS 4.1- */
-    font-style: normal;
-    font-weight: normal;
-}
-
 
 a{
     color:#fff;
@@ -50,7 +26,6 @@ a{
 
     &:hover{
         color:#fff;
-        text-decoration: underline;
     }
 }
 

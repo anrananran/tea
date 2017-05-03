@@ -4,7 +4,6 @@ const MERGE_CONFIG = {
         'tooltipster/tooltipster.css',
         'layer/skin/default/layer.css',
         'isloading/isloading.css',
-        'bxslider/bxslider.css',
         'select2/select2.css',
     ],
     
@@ -15,8 +14,8 @@ const MERGE_CONFIG = {
         'isloading/isloading.js',
         'modernizr/modernizr.js',
         'tabslet/tabslet.js',
-        'bxslider/bxslider.js',
         'select2/select2.js',
+        'keymaster/keymaster.js',
    ],
    POLYFILL_FILE : [
         'polyfill/es5-shim.js',
