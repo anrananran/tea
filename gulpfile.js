@@ -104,10 +104,10 @@ gulp.task('sass',function () {
     .pipe(sass({
         //outputStyle: 'compressed'
     }).on('error', sass.logError))
-    .pipe(autoprefixer({
-        browsers: ['last 5 versions','Firefox >= 20','iOS >= 7','ie 8-11'],
-        remove: false
-    }))
+    // .pipe(autoprefixer({
+    //     browsers: ['last 5 versions','Firefox >= 20','iOS >= 7','ie 8-11'],
+    //     remove: false
+    // }))
     // .pipe(csscomb()) //属性排序
     // .pipe(cssmin({
     //     advanced :true, //开启智能压缩
