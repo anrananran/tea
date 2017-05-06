@@ -13,7 +13,7 @@
 }
 
 //1px线，移动端使用
-@mixin one-px($color,$direction:all){
+@mixin one-px($color,$direction:all,$radius:0){
     position: relative;
 
     &:before{
@@ -26,6 +26,7 @@
         transform: scale(.5);
         transform-origin:left top;
         pointer-events: none;
+        border-radius: $radius;
     }
 
     @if $direction == all {
