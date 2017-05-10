@@ -43,6 +43,52 @@
     }
 }
 
+
+//1px线单方向
+@mixin single-px($color,$direction:bottom){
+    position: relative;
+
+    &:after{
+        content: "";
+        position: absolute;
+        pointer-events: none;
+    }
+
+    @if $direction == bottom {
+        &:after{
+            border-bottom: 1px solid $color;
+            width: 100%;
+            left: 0;
+            bottom: 0;
+            transform: scaleY(.5);
+        }
+    }@else if $direction == left{
+        &:after{
+            border-left: 1px solid $color;
+            height: 100%;
+            left: 0;
+            top: 0;
+            transform: scaleX(.5);
+        }
+    }@else if $direction == top{
+        &:after{
+            border-top: 1px solid $color;
+            width: 100%;
+            left: 0;
+            top: 0;
+            transform: scaleY(.5);
+        }
+    }@else if $direction == right{
+        &:after{
+            border-right: 1px solid $color;
+            height: 100%;
+            right: 0;
+            top: 0;
+            transform: scaleX(.5);
+        }
+    }
+}
+
 @mixin root($name) {
     @at-root .#{$name} {
         @content;
