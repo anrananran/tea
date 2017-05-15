@@ -23,8 +23,10 @@ const nunjucks = require('gulp-nunjucks');
 const changedInPlace = require('gulp-changed-in-place');
 const gulpIgnore = require('gulp-ignore');
 const minify = require('gulp-minifier');
+const sequence = require('gulp-sequence');
 const opn = require('opn');
 const sourcemaps = require('gulp-sourcemaps');
+const connect = require('gulp-connect');
 
 const root = './';//项目文件路径
 const dev_path = {
@@ -35,6 +37,7 @@ const dev_path = {
 const config_path = dev_path.src + 'js/config.js';
 
 gulp.task('default',[
+    'connect',
     'html',
     'font',
     'image',
@@ -43,6 +46,20 @@ gulp.task('default',[
     'sass',
     'watch'
 ]);
+
+//创建一个服务器
+gulp.task('connect', function() {
+    connect.server({
+        host: '192.168.1.100', //地址，可不写，不写的话，默认localhost
+        port: 8000, //端口号，可不写，默认8000
+        root:'./',//服务器根目录，即此gulpfile文件所在目录
+        livereload: true //自动刷新
+    });
+});
+
+gulp.task('reload', function(){
+    return gulp.src('').pipe(connect.reload()); //服务器下所有连接都会刷新
+});
 
 //html编译
 gulp.task('html',function(){
@@ -100,21 +117,21 @@ gulp.task('html-inc',function(){
 gulp.task('sass',function () {
 
     return gulp.src(dev_path.src + 'sass/*.scss')
-    .pipe(sourcemaps.init())
+    // .pipe(sourcemaps.init())
     .pipe(sass({
         //outputStyle: 'compressed'
     }).on('error', sass.logError))
-    // .pipe(autoprefixer({
-    //     browsers: ['last 5 versions','Firefox >= 20','iOS >= 7','ie 8-11'],
-    //     remove: false
-    // }))
-    // .pipe(csscomb()) //属性排序
-    // .pipe(cssmin({
-    //     advanced :true, //开启智能压缩
-    //     keepSpecialComments:0,//移除所有注释
-    //     restructuring:false//关闭选择器重组(此选项在classname名字过长时开启反而会增加文件体积)
-    // }))
-    .pipe(sourcemaps.write('./'))
+    .pipe(autoprefixer({
+        browsers: ['last 5 versions','Firefox >= 20','iOS >= 7','ie 8-11'],
+        remove: false
+    }))
+    .pipe(csscomb()) //属性排序
+    .pipe(cssmin({
+        advanced :true, //开启智能压缩
+        keepSpecialComments:0,//移除所有注释
+        restructuring:false//关闭选择器重组(此选项在classname名字过长时开启反而会增加文件体积)
+    }))
+    // .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(dev_path.dist + 'static/css'));
 });
 
@@ -282,7 +299,8 @@ gulp.task('watch', function () {
           opn(pageurl);
         }
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('html');
+        // gulp.start('html');
+        sequence('html','reload')();
     });
 
     //监控html文件中的inc目录
@@ -291,7 +309,8 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('html-inc');
+        // gulp.start('html-inc');
+        sequence('html-inc','reload')();
     });
 
     //监控sass文件
@@ -300,7 +319,8 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('sass');
+        // gulp.start('sass');
+        sequence('sass','reload')();
     });
 
     //监控js文件
@@ -309,7 +329,8 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('js');
+        // gulp.start('js');
+        sequence('js','reload')();
     });
 
     //监控图片文件
@@ -318,8 +339,9 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('image');
-        gulp.start('sprite');
+        // gulp.start('image');
+        // gulp.start('sprite');
+        sequence('image','sprite','reload')();
     });
 
     //监控字体文件
@@ -328,6 +350,7 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         console.log('File ' + vinyl.path + ' was changed, running tasks...');
-        gulp.start('font');
+        // gulp.start('font');
+        sequence('font','reload')();
     });
 });
