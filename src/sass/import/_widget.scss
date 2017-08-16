@@ -127,12 +127,11 @@
     text-align: center;
     display: block;
 
-    &:before{
+    &:after{
         content:"";
         height:100%;
         vertical-align: middle;
         display: inline-block;
-        margin-left: -5px;
     }
 
     img{
