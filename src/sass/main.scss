@@ -1,6 +1,22 @@
 @charset "utf-8";
 
-@import "import/define/function";
-@import "import/define/mixin";
-@import "import/icon/test";
+
+@import "import/base/normalize";                //样式统一
+@import "import/base/reset";                    //样式重置
+
+@import "import/define/function";               //函数
+@import "import/define/mixin";                  //混合宏
+@import "import/define/helper";                 //助手类
+
+@import "import/icon/font";                     //字体图标
+@import "import/icon/mini";                     //精灵图标
+@import "import/icon/test";                     //精灵图标
+
+@import "import/keyframes";                     //动画
+@import "import/color";                         //颜色
+@import "import/widget";                        //小部件
+
+@import "import/page/common";                   //公共样式
+@import "import/page/index";                    //页面样式
+
 

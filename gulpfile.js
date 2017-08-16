@@ -55,9 +55,12 @@ gulp.task('connect', function() {
         root:'./',//服务器根目录，即此gulpfile文件所在目录
         livereload: true //自动刷新
     });
+
+    //此地址才有效: http://192.168.1.100:8000/dist/example.html
 });
 
 gulp.task('reload', function(){
+
     return gulp.src('').pipe(connect.reload()); //服务器下所有连接都会刷新
 });
 
@@ -295,7 +298,7 @@ gulp.task('watch', function () {
         readDelay:1000
     },function(vinyl){
         if(vinyl.event == 'add'){
-          var pageurl = path.join('http://192.168.1.101/',path.relative('E:\\',vinyl.path).replace('src\\html\\','dist\\'));
+          var pageurl = path.join('http://192.168.1.100/',path.relative('E:\\',vinyl.path).replace('src\\html\\','dist\\'));
           opn(pageurl);
         }
         console.log('File ' + vinyl.path + ' was changed, running tasks...');

@@ -3,7 +3,7 @@
 
 <head>
     {% include "inc/meta/desktop.html" %}
-    {% include "inc/source/css.html" %}
+    <link rel="stylesheet" href="static/css/vendor.css" >
     <link rel="stylesheet" href="static/css/main.css" >
     {% include "inc/source/js-top.html" %}
     
@@ -17,8 +17,8 @@
         <!--主体-->
         <div class="page-inner" id="js-page-inner">
             
-            <div class="wrapper">
-                <div style="font-size: 100px;text-align: center;margin-top: 200px;">tea workflow</div>
+            <div class="wrapper flex flex-vertical flex-horizontal" style="height: 100vh;">
+                <div style="font-size: 100px;">tea workflow</div>
             </div>   
 
         </div>
